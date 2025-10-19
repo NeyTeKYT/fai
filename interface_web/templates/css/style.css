@@ -1,0 +1,74 @@
+:root {
+    --font: Arial, Helvetica, sans-serif;   /* Police d'écriture */
+
+     --grey: #808080; /* Couleur de la barre de navigation */
+
+     --orange: orange; /* Couleur pour le formulaire */
+
+     --bleu: #009edf; /* Couleur pour le footer */
+}
+
+* {
+    margin: 0;
+    text-decoration: none;
+    font-family: var(--font);
+}
+
+/* Barre de navigation */
+header {
+    background-color: var(--grey);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+
+}
+
+header a {
+    margin: 50px;
+    color: white;
+}
+
+header a:hover {
+    color: var(--orange);
+}
+
+main {
+    text-align: center;
+    padding: 100px;
+}
+
+form {
+    background-color: var(--orange);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 50px;
+    margin-top: 20px;
+}
+
+form input {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: var(--bleu);
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.resultat {
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}

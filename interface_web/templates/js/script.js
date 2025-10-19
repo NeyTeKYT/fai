@@ -1,0 +1,1 @@
+//alert("Hello World !")    // Permet de vérifier que le fichier JavaScript est bien interprété par le navigateur
