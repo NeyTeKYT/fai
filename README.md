@@ -43,12 +43,13 @@ Une fois le formulaire soumis, le serveur PHP (une migration partielle vers Java
 Ce projet a été conçu pour fonctionner sur des machines virtuelles.  
 Voici les étapes d'installation du fournisseur d'accès à *Internet* sur votre serveur ou box :
 1. Créez une machine virtuelle avec un système d'exploitation Linux (de préférence avec une interface graphique pour accéder à l'interface web depuis la même machine).
-2. Clonez ce dépôt sur votre machine personnelle.   
-3. Copiez le dossier `/scripts` dans votre répertoire personnel, par exemple : `/home/[Votre nom d'utilisateur]/`.
-4. Installez un serveur Apache sur votre machine virtuelle.
-5. Copiez le dossier `/interface_web` dans `/var/www/html/` afin d'y accéder via `localhost/interface_web` dans votre navigateur.
-6. Modifiez les droits du dossier `/interface_web` : `sudo chmod 777 interface_web`
-7. Pour permettre à Apache d'exécuter le script `/scripts/ip.sh` avec les privilèges sudo sans demander de mot de passe, exécutez `sudo visudo`, puis ajoutez la ligne suivante : `www-data ALL=(ALL) NOPASSWD: /home/[Votre nom d'utilisateur]/scripts/ip.sh`
+2. Configurez le fichier `/etc/network/interfaces` pour que l'interface "Réseau Interne" puisse obtenir une adresse IP de manière statique.
+3. Clonez ce dépôt sur votre machine personnelle.   
+4. Copiez le dossier `/scripts` dans votre répertoire personnel, par exemple : `/home/[Votre nom d'utilisateur]/`.
+5. Installez un serveur Apache sur votre machine virtuelle.
+6. Copiez le dossier `/interface_web` dans `/var/www/html/` afin d'y accéder via `localhost/interface_web` dans votre navigateur.
+7. Modifiez les droits du dossier `/interface_web` : `sudo chmod 777 interface_web`
+8. Pour permettre à Apache d'exécuter le script `/scripts/ip.sh` avec les privilèges sudo sans demander de mot de passe, exécutez `sudo visudo`, puis ajoutez la ligne suivante : `www-data ALL=(ALL) NOPASSWD: /home/[Votre nom d'utilisateur]/scripts/ip.sh`
 
 Si tout est bien configuré, vous devriez utiliser l'interface web pour modifier l'adresse IP du réseau interne.
 
