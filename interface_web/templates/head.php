@@ -6,7 +6,7 @@
     <!-- Modifier le title en fonction de la page -->
 	<title>AMS Réseau - FAI</title>
 
-    <link rel="stylesheet" href="/FAI/templates/css/style.css">
+    <link rel="stylesheet" href="/interface_web/templates/css/style.css">
 </head>
 
 <body>

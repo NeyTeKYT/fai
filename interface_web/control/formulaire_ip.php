@@ -19,7 +19,7 @@
 		elseif($isPublic !== false) echo "<h2 class='resultat red'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
 
 		else {
-			$script_command = "sudo /home/stud/FAI/IP/ip.sh " . escapeshellarg($ip);
+			$script_command = "sudo /home/stud/scripts/ip.sh " . escapeshellarg($ip);
 			exec($script_command, $output, $retval);	// 'exec' au lieu de 'shell_exec' pour récupérer $retval et savoir s'il s'agit de l'adresse IP actuelle ou pas
 			if($retval == 2) echo "<h2 class='resultat red'>Les adresses IP sont les mêmes !</h2>";	// Valeur récupérée grâce à un exit(2) dans le script Bash
 			else {
