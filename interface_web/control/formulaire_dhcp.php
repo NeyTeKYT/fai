@@ -10,6 +10,13 @@
 	$get_configured_devices_number = 'cat /etc/dhcp/dhcpd.conf | grep "# Nombre de machines configurées" | cut -d":" -f2';
 	$current_configured_devices_number = htmlspecialchars(shell_exec($get_configured_devices_number));
 
+	// Définit le nombre maximum de valeurs possibles en fonction du masque de sous-réseau
+	$subnet_mask_octets = explode('.', $subnet_mask);
+	$subnet_mask_binary = '';
+	foreach($subnet_mask_octets as $octet) $subnet_mask_binary .= str_pad(decbin((int)$octet), 8, '0', STR_PAD_LEFT);
+	$cidr = substr_count($subnet_mask_binary, '1');
+	$max_value = pow(2, 32 - $cidr) - 2;
+
 	// Cas d'envoi du formulaire
 	if($_POST['devices_number']) {
 
@@ -18,7 +25,12 @@
 		// Vérification du nombre de machines entré par l'utilisateur
 		$isInteger = filter_var($devices_number, FILTER_VALIDATE_INT);	// Vérifie que c'est bien un entier
 
+		// Vérifie que le nombre d'hôtes entré par le client est réalisable en fonction du masque de sous-réseau
+		$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
+		$subnet_mask = htmlspecialchars(trim(shell_exec($get_subnet_mask_command)));
+
 		if($isInteger === false) echo "<h2 class='resultat red'>$devices_number n'est pas un entier !</h2>";
+		else if($devices_number > $max_value) echo "<h2 class='resultat red'>Le masque de sous-réseau actuel ne permet pas d'avoir $devices_number appareils !</h2>";
 
 		# Vérifie que le nombre entré par l'utilisateur de la configuration actuelle
 		else if($devices_number === $current_configured_devices_number) echo "<h2 class='resultat red'>La configuration de la plage d'adresses est déjà mise en place avec $current_configured_devices_number !</h2>";
@@ -35,7 +47,7 @@
 
 	// Récupération du nombre de machines déjà configurées
 	$get_configured_devices_number = 'cat /etc/dhcp/dhcpd.conf | grep "# Nombre de machines configurées" | cut -d":" -f2';
-	$current_configured_devices_number = htmlspecialchars(shell_exec($get_configured_devices_number));
+	$current_configured_devices_number = htmlspecialchars(trim(shell_exec($get_configured_devices_number)));
 
     include($racine_path . "templates/formulaire_dhcp.php");
 
