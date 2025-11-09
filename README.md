@@ -39,6 +39,8 @@ Lors de la soumission du formulaire, le serveur PHP (une migration partielle ver
 - Vérifie le code de retour du script pour déterminer si la configuration est identique à l'actuelle.
 - Affiche un message d'erreur dans ce cas, ou un message de confirmation en cas de succès.
 
+![demo_formulaire_ip](https://github.com/user-attachments/assets/7777c35d-6986-4d61-8c81-01fe4fec9bcc)
+
 ---
 
 ## 📮 Formulaire DHCP
@@ -68,6 +70,8 @@ Lors de la soumission du formulaire, le serveur PHP (une migration partielle ver
 3. Exécute le script *Bash* `/scripts/dhcp.sh` précédemment créé via la fonction *exec*, en lui transmettant les valeurs saisies par l’utilisateur.
 4. Analyse le **code de retour du script** pour détecter d’éventuelles erreurs.
 5. Affiche un **message d’erreur ou de confirmation** selon le résultat.
+
+![demo_formulaire_dhcp](https://github.com/user-attachments/assets/edccb038-e6d9-41e6-9097-4f2bfe1c51af)
 
 ---
 
