@@ -49,9 +49,10 @@ form {
     margin-top: 20px;
 }
 
-form input {
-    margin-top: 10px;
-    margin-bottom: 20px;
+form .ip_address {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 footer {

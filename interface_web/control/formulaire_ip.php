@@ -7,32 +7,83 @@
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
 
 	// Cas d'envoi du formulaire
-	if($_POST['ip']) {
+	if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-		$ip = htmlspecialchars($_POST['ip']);	// Stockage de l'adresse IP entrée par l'utilisateur
+		// MASQUE DE SOUS-RÉSEAU
+		// Récupération des valeurs des 4 octets du masque de sous-réseau
+		$subnet_mask_octets = [
+			intval($_POST['subnet_mask_octet1'] ?? 0),
+			intval($_POST['subnet_mask_octet2'] ?? 0),
+			intval($_POST['subnet_mask_octet3'] ?? 0),
+			intval($_POST['subnet_mask_octet4'] ?? 0),
+		];
+
+		// Reformater le masque de sous-réseau en concaténant les 4 octets
+		$subnet_mask = implode('.', $subnet_mask_octets);
+
+		// Toutes les valeurs possibles pour les octets du masque de sous-réseau
+		$valid_subnet_mask_octet_values = [255, 254, 248, 240, 224, 192, 128, 0];
+
+		// Vérifie que chaque octet a une valeur valide
+		$areSubnetMaskOctetsValuesValid = true;
+		foreach($subnet_mask_octets as $octet_value) {
+			if(!in_array($octet_value, $valid_subnet_mask_octet_values)) {
+				$areSubnetMaskOctetsValuesValid = false;
+				break;
+			}
+		}
+
+		// Vérifie que le masque de sous-réseau est bien "consécutif" en binaire (pas de 0 avant la fin des 1)
+		$binary_subnet_mask = '';
+		foreach(explode('.', $subnet_mask) as $octet) $binary_subnet_mask .= str_pad(decbin($octet), 8, '0', STR_PAD_LEFT);	// Convertie chaque octet en binaire
+		$isSubnetMaskValid = preg_match('/^1*0*$/', $binary_subnet_mask);	// Vérifie qu'il n'y a pas une mauvaise transition de 0 et de 1
+
+		// ADRESSE IP
+		// Récupération des valeurs des 4 octets de l'adresse IP
+		$ip_address_octets = [
+			intval($_POST['ip_octet1'] ?? 0),
+			intval($_POST['ip_octet2'] ?? 0),
+			intval($_POST['ip_octet3'] ?? 0),
+			intval($_POST['ip_octet4'] ?? 0),
+		];
+
+		// Reformater le masque de sous-réseau en concaténant les 4 octets
+		$ip = implode('.', $ip_address_octets);
 		
 		// Vérification de l'adresse IP entrée par l'utilisateur
-		$isValid = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);	// Vérifie qu'il s'agit bien d'une adresse IPv4
-		$isPublic = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);	// Vérifie que l'adresse IP n'est pas une adresse privée
+		$isIpValid = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);	// Vérifie qu'il s'agit bien d'une adresse IPv4
+		$isIpPublic = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);	// Vérifie que l'adresse IP n'est pas une adresse privée
 
-		if($isValid === false) echo "<h2 class='resultat red'>$ip n'est pas une adresse IPv4 !</h2>";
-		elseif($isPublic !== false) echo "<h2 class='resultat red'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
+		// Traite les messages d'erreurs
+		if((!$areSubnetMaskOctetsValuesValid) || (!$isSubnetMaskValid)) echo "<h2 class='resultat red'>$subnet_mask n'est pas un masque de sous-réseau !</h2>";
+		elseif($isIpValid === false) echo "<h2 class='resultat red'>$ip n'est pas une adresse IPv4 !</h2>";
+		elseif($isIpPublic !== false) echo "<h2 class='resultat red'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
 
+		// Exécute le script pour modifier les informations de l'interface eth1
 		else {
-			$script_command = "sudo /home/stud/scripts/ip.sh " . escapeshellarg($ip);
-			exec($script_command, $output, $retval);	// 'exec' au lieu de 'shell_exec' pour récupérer $retval et savoir s'il s'agit de l'adresse IP actuelle ou pas
-			if($retval == 2) echo "<h2 class='resultat red'>Les adresses IP sont les mêmes !</h2>";	// Valeur récupérée grâce à un exit(2) dans le script Bash
-			else {
-				echo "<h2 class='resultat green'>La nouvelle adresse IP de la box internet est $ip !</h2>";
-			}
+			$script_command = "sudo /home/stud/scripts/ip.sh " . escapeshellarg($ip) . ' ' . escapeshellarg($subnet_mask);
+			exec($script_command, $output, $retval);	// 'exec' au lieu de 'shell_exec' pour récupérer $retval et savoir s'il s'agit de la configuration actuelle ou pas
+			if($retval == 2) echo "<h2 class='resultat red'>Il s'agit de la configuration actuelle !</h2>";	// Valeur récupérée grâce à un exit(2) dans le script Bash
+			else echo "<h2 class='resultat green'>Le masque de sous-réseau est $subnet_mask</br>La nouvelle adresse IP de la box internet est $ip !</h2>";
 		}
 	}
 
 	//echo nl2br(file_get_contents('/etc/network/interfaces'));	// Affichage du fichier /etc/network/interfaces pour bien montrer la modification effectuée
 
+	// Toutes les valeurs possibles pour les octets du masque de sous-réseau
+	$valid_subnet_mask_octet_values = [255, 254, 248, 240, 224, 192, 128, 0];
+
+	// Récupération du masque de sous-réseau actuel
+	// FORMAT 255.255.255.0 PAS /24
+	$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
+	$current_subnet_mask = htmlspecialchars(trim(shell_exec($get_subnet_mask_command)));
+
+	// Division de l'adresse IP en 4 octets (tableau)
+	$current_subnet_mask_octets = explode('.', $current_subnet_mask);
+
 	// Récupération de l'adresse IP actuelle pour pouvoir l'insérer par défaut dans l'input
 	$get_ip_command = 'cat /etc/network/interfaces | grep "address" | cut -d" " -f2';
-	$current_ip = htmlspecialchars(shell_exec($get_ip_command));
+	$current_ip = htmlspecialchars(trim(shell_exec($get_ip_command)));
 
 	include($racine_path . "templates/formulaire_ip.php");
 
