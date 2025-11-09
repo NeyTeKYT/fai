@@ -6,42 +6,58 @@
 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
 
-	// Récupération du nombre de machines déjà configurées
-	$get_configured_devices_number = 'cat /etc/dhcp/dhcpd.conf | grep "# Nombre de machines configurées" | cut -d":" -f2';
-	$current_configured_devices_number = htmlspecialchars(shell_exec($get_configured_devices_number));
+	// Récupère l'adresse IP
+	$get_ip_command = 'cat /etc/network/interfaces | grep "address" | cut -d" " -f2';
+	$current_ip_address = trim(shell_exec($get_ip_command));
+	// Sépare l'IP en 4 octets
+	$ip_address_octets = array_map('intval', explode('.', $current_ip_address));
 
-	// Définit le nombre maximum de valeurs possibles en fonction du masque de sous-réseau
-	$subnet_mask_octets = explode('.', $subnet_mask);
+	// Récupère le masque de sous-réseau
+	$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
+	$current_subnet_mask = trim(shell_exec($get_subnet_mask_command));
+	// Sépare le masque de sous-réseau en 4 octets
+	$subnet_mask_octets = array_map('intval', explode('.', $current_subnet_mask));
+
+	// Calcule l'adresse réseau
+	$network_address = sprintf(
+		"%d.%d.%d.%d",
+		($ip_address_octets[0] & $subnet_mask_octets[0]),
+		($ip_address_octets[1] & $subnet_mask_octets[1]),
+		($ip_address_octets[2] & $subnet_mask_octets[2]),
+		($ip_address_octets[3] & $subnet_mask_octets[3])
+	);
+
+	// Calcule le CIDR et le nombre maximum d'hôtes dans la plage d'adresses
 	$subnet_mask_binary = '';
-	foreach($subnet_mask_octets as $octet) $subnet_mask_binary .= str_pad(decbin((int)$octet), 8, '0', STR_PAD_LEFT);
+	foreach ($subnet_mask_octets as $octet) $subnet_mask_binary .= str_pad(decbin((int)$octet), 8, '0', STR_PAD_LEFT);
 	$cidr = substr_count($subnet_mask_binary, '1');
 	$max_value = pow(2, 32 - $cidr) - 2;
+
+	// Récupération du nombre de machines déjà configurées
+	$get_configured_devices_number = 'cat /etc/dhcp/dhcpd.conf | grep "# Nombre de machines configurées" | cut -d":" -f2';
+	$current_configured_devices_number = trim(shell_exec($get_configured_devices_number));
 
 	// Cas d'envoi du formulaire
 	if($_POST['devices_number']) {
 
-		$devices_number = htmlspecialchars($_POST['devices_number']);	// Stockage du nombre de machines entré par l'utilisateur
+		// Stockage du nombre de machines entré par l'utilisateur
+		$devices_number = htmlspecialchars($_POST['devices_number']);	
 		
-		// Vérification du nombre de machines entré par l'utilisateur
-		$isInteger = filter_var($devices_number, FILTER_VALIDATE_INT);	// Vérifie que c'est bien un entier
-
-		// Vérifie que le nombre d'hôtes entré par le client est réalisable en fonction du masque de sous-réseau
-		$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
-		$subnet_mask = htmlspecialchars(trim(shell_exec($get_subnet_mask_command)));
+		// Vérifie que le nombre de machines entré par l'utilisateur est bien un entier
+		$isInteger = filter_var($devices_number, FILTER_VALIDATE_INT);	
 
 		if($isInteger === false) echo "<h2 class='resultat red'>$devices_number n'est pas un entier !</h2>";
-		else if($devices_number > $max_value) echo "<h2 class='resultat red'>Le masque de sous-réseau actuel ne permet pas d'avoir $devices_number appareils !</h2>";
-
-		# Vérifie que le nombre entré par l'utilisateur de la configuration actuelle
-		else if($devices_number === $current_configured_devices_number) echo "<h2 class='resultat red'>La configuration de la plage d'adresses est déjà mise en place avec $current_configured_devices_number !</h2>";
+		// Vérifie que le nombre entré par l'utilisateur ne correspond pas déjà la configuration actuelle
+		else if($devices_number == trim($current_configured_devices_number)) echo "<h2 class='resultat red'>La configuration de la plage d'adresses est déjà mise en place avec $current_configured_devices_number !</h2>";
+		// Cas où le nombre d'appareils souhaité est supérieur au nombre d'hôtes maximum en fonction du masque de sous-réseau
+		else if($devices_number > $max_value) echo "<h2 class='resultat red'>Le masque de sous-réseau actuel $current_subnet_mask ne permet pas d'avoir $devices_number appareils !</h2>";
 		
 		else {
-			$script_command = "sudo /home/stud/scripts/dhcp.sh " . escapeshellarg($devices_number);
+			$script_command = "sudo /home/stud/scripts/dhcp.sh " . escapeshellarg($devices_number) . ' ' . escapeshellarg($network_address);
 			exec($script_command, $output, $retval);	// 'exec' au lieu de 'shell_exec' pour récupérer $retval et savoir s'il s'agit de l'adresse IP actuelle ou pas
-			if($retval == 2) echo "<h2 class='resultat red'>Un trop grand nombre de machines ne peut être configuré !</h2>";	// Valeur récupérée grâce à un exit(2) dans le script Bash
-			else {
-				echo "<h2 class='resultat green'>La nouvelle plage d'addresses contient $devices_number machines !</h2>";
-			}
+			if($retval == 2) echo "<h2 class='resultat red'>DHCP ne supporte pas les masques de sous-réseaux /31 et /32 car ils ne permettent pas de configurer respectivement 2 ou 1 machine(s) !</h2>";	// Valeur récupérée grâce à un exit(2) dans le script Bash
+			else if($retval == 3) echo "<h2 class='resultat red'>Impossible de configurer $devices_number appareils avec un masque de sous-réseau $current_subnet_mask !</h2>";
+			else echo "<h2 class='resultat green'>La nouvelle plage d'addresses contient $devices_number machines !</h2>";
 		}
 	}
 
