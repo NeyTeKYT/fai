@@ -26,10 +26,7 @@
         <!-- Adresse IP -->
 		<label for="ip">Adresse IP :</label><br>
 
-		<!-- Ancienne version -->
-		<!--<input type="text" id="ip" name="ip" value="<?php echo "$current_ip"; ?>"><br>-->   
-
-		<!-- Nouvelle version avec 1 input par octet, modifiable ou non en fonction du masque de sous-réseau -->
+		<!-- 1 input par octet, modifiable ou non en fonction du masque de sous-réseau -->
 		<section class="octets">
 			<input type="number" id="ip_octet1" name="ip_octet1" min="0" max="255" value="<?php echo explode('.', $current_ip)[0]; ?>" />
 			.
