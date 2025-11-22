@@ -5,8 +5,9 @@
 
         <!-- Nombre de machines -->
 		<label for="devices_number">Nombre de machines à inclure dans la plage d'adresses :</label><br>
+
         <!-- Mettre par défaut le nombre de machines configurées sur la plage d'adresses actuelle comme valeur du Input -->
-		<input type="number" id="devices_number" name="devices_number" min="1" max="<?php echo $max_value; ?>" value="<?php echo "$current_configured_devices_number"; ?>"><br>	<!-- Ajouter le maximum en fonction du masque de sous-réseau -->
+		<input type="number" id="devices_number" name="devices_number" min="1" max="<?php echo $max_value; ?>" value="<?php echo "$current_configured_devices_number"; ?>"><br>	
 
 		<input type="submit" value="Soumettre">
 	</form>
