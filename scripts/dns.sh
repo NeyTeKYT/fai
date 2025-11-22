@@ -166,4 +166,26 @@ sudo cp /etc/bind/reverse.$network_part.db /var/backups/FAI/dns/$date/reverse.$n
 # Redémarre le serveur DNS pour appliquer les changements
 sudo systemctl restart bind9
 
-# Modification des informations sur le serveur DNS du FAI
+# Création du fichier update_on_isp.txt s'il n'existe pas déjà
+if [ ! -f "/etc/bind/update_on_isp.txt" ]
+then
+  sudo touch /etc/bind/update_on_isp.txt
+fi
+
+# Mise en place du fichier de commandes nsupdate pour actualiser la configuration de la zone sur le FAI
+{
+    echo "server 192.168.1.22"  # IP du serveur DNS du FAI (ISP)
+    echo "zone ceri.com"
+    echo ""
+    # Suppression des deux anciens records
+    echo "update delete $activeFirstName.ceri.com. NS"
+    echo "update delete $activeFirstName.ceri.com. A"
+    # Ajout des nouvelles lignes de la nouvelle configuration
+    echo "update add $newFirstName.ceri.com. 86400 NS $newFirstName.ceri.com."
+    echo "update add $newFirstName.ceri.com. 86400 A $current_ip_address"
+    echo ""
+    echo "send"
+} | sudo tee /etc/bind/update_on_isp.txt > /dev/null
+
+# Envoie le fichier de commandes au FAI en utilisant la clé TSIG-KEYGEN générée
+sudo nsupdate -k /etc/bind/remote-key.key /etc/bind/update_on_isp.txt
