@@ -113,6 +113,8 @@ Lors de la soumission du formulaire, le serveur *PHP* (une migration partielle v
 4. Renvoie une erreur s'il s'agit déjà de la configuration actuelle.
 5. Affiche un **message d’erreur ou de confirmation** selon le résultat.
 
+![demo_interface_web_dns](https://github.com/user-attachments/assets/87eb402f-dfc9-4e75-b906-efcef084a7b0)
+
 ---
 
 ## ⚙️ Installation
