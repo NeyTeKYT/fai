@@ -10,7 +10,7 @@ Ce projet a été réalisé dans le cadre de l'**Activité de Mise en Situation 
 
 ---
 
-## 📮 Formulaire IP
+## 📎 Formulaire IP
 
 La première étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de modifier l'adresse IP de la box *Internet***.
 
@@ -43,7 +43,7 @@ Lors de la soumission du formulaire, le serveur PHP (une migration partielle ver
 
 ---
 
-## 📮 Formulaire DHCP
+## 🗄️ Formulaire DHCP
 
 La deuxième étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de modifier la plage d'adresses attribuées par le serveur DHCP.**  
 
@@ -75,6 +75,46 @@ Lors de la soumission du formulaire, le serveur PHP (une migration partielle ver
 
 ---
 
+## 🌐 Formulaire DNS
+
+La troisième étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de configurer son préfixe, via son prénom, pour définir un domaine pour la box Internet.**  
+Ceci permet, au lieu de ping l'adresse IP de la box Internet, de ping le domaine configuré grâce à une résolution. 
+
+Pour cela, j'ai développé un **script *Bash*** (`/scripts/dns.sh`) qui :
+1. Vérifie le nombre d'arguments fournis lors de l'appel du script et s'interrompt s'il n'y en a plus d'1 (le prénom, préfixe du domaine "ceri.com").
+2. Stocke l'arguments dans une variable.
+3. Attribue, si l'argument est vide, la valeur du hostname.
+4. Récupère, dans le fichier `/etc/network/interfaces`, l'adresse IP et le masque de sous-réseau de la configuration actuellle, puis les enregistre dans des variables.
+5. Calcule l'adresse réseau à partir des deux variables précédentes.
+6. Calcule le **CIDR** (nombre de bits à 1 dans le masque de sous-réseau). Si celui-ci vaut 31 ou 32, une erreur est renvoyée, car le protocole DHCP ne pourrait pas définir de plage d'adresses valides (ces masques ne laissent aucune adresse disponible pour les hôtes).
+7. Réecrit le fichier ***named.conf.local*** de la box Internet, situé dans le dossier ***/etc/bind*** pour redéfinir la zone en fonction du nouveau préfixe configuré.
+8. S'assure que le fichier ne retourne pas **une erreur de syntaxe** grâce à la commande ***named-checkconf***.
+9. Récupère le numéro *SERIAL* et l'incrémente.
+10. Supprime l'ancien fichier *db.$activeFirstName.ceri.com*
+11. Fait une copie du fichier *db.local* en ***db.$newFirstName.ceri.com***, où *$newFirstName* est l'argument donné au script.
+12. Modifie ce fichier en remplaçant les valeurs clés par les valeurs définies tout au long du script.
+13. Fait une copie du fichier *db.127* en ***reverse.$network_part.db***, où *$network_part* est la partie réseau calculée à partir du CIDR.
+14. Modifie ce fichier en remplaçant les valeurs clés par les valeurs définies tout au long du script.
+15. Réalise un backup des fichiers qui viennent d'être configurés dans le dossier ***/var/backups/FAI***/
+16. Redémarre le serveur *BIND9*.
+17. Crée un fichier de commandes pour utiliser ***nsupdate*** afin de modifier les informations du nouveau préfixe sur le serveur DNS se trouvant sur la machine virtuelle du FAI.
+18. Écriture dans ce fichier de commandes crée, au format attendu par nsupdate.
+19. Exécution de la commande, avec comme paramètre ma clé commune et connue par la box *Internet* et par le FAI.
+
+L’interface web permet désormais d'écrire son prénom pour pouvoir ping la box Internet à partir du domaine configuré.  
+
+Le **formulaire DNS** affiche automatiquement, à l’ouverture, **le prénom configuré**.  
+L’utilisateur peut alors **saisir un nouveau prénom** afin de définir un nouveau domaine qui sera automatiquement appliqué (voir GIF ci-joint).  
+
+Lors de la soumission du formulaire, le serveur *PHP* (une migration partielle vers JavaScript est également prévue pour améliorer les performances) effectue plusieurs vérifications :
+1. Vérifie que le **prénom** n'est pas vide.
+2. S'assure que le prénom **ne contient pas de chiffre ou de caractères spéciaux**.
+3. Compare la longueur du prénom qui ne doit pas dépasser **la taille max d'un préfixe DNS qui est 63**.
+4. Renvoie une erreur s'il s'agit déjà de la configuration actuelle.
+5. Affiche un **message d’erreur ou de confirmation** selon le résultat.
+
+---
+
 ## ⚙️ Installation
 
 Ce projet a été conçu pour fonctionner sur des machines virtuelles.  
@@ -92,3 +132,4 @@ Voici les étapes d'installation du fournisseur d'accès à *Internet* sur votre
 
 Si tout est bien configuré, vous devriez pouvoir utiliser l'interface web pour modifier l'adresse IP du réseau interne et configurer la plage d'adresses attribuées par le serveur DHCP.
 
+*L'installation du serveur DNS est en cours de réfléxion !*
