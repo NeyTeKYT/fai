@@ -1,11 +1,29 @@
 :root {
-    --font: Arial, Helvetica, sans-serif;   /* Police d'écriture */
+    /* Police d'écriture */
+    --font: 'Inter', sans-serif;
 
-     --grey: #808080; /* Couleur de la barre de navigation */
+    /* Couleurs pour les boutons principaux */
+    --button: #1A73E8;
+    --button-hover: #1359B3;
 
-     --orange: orange; /* Couleur pour le formulaire */
+    /* Couleur d'arrière plan : pour une interface web simple et moderne */
+    --background: #FFFFFF;
+    --inactive-page: #6C757D;
+    --active-page: #1A73E8;
 
-     --bleu: #009edf; /* Couleur pour le footer */
+    /* Couleurs pour les textes */
+    --main-text: #333333;
+    --secondary-text: #6C757D;
+
+    /* Couleurs pour les cards */
+    --card-text: #2C3E50;
+    --card-border: #E3E6EA;
+
+    /* États des services */
+    --success: #28A745;
+    --warning: #FFC107;
+    --danger: #DC3545;
+    --info: #17A2B8;
 }
 
 * {
@@ -16,52 +34,145 @@
 
 /* Barre de navigation */
 header {
-    background-color: var(--grey);
+    background-color: var(--background);
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100px;
-
 }
 
 header a {
     margin: 50px;
-    color: white;
+    color: var(--inactive-page);
+    font-weight: bold;
 }
 
 header a:hover {
-    color: var(--orange);
+    color: var(--active-page);
+    text-decoration: underline;
 }
 
+/* Contenu principal de chaque onglet */
 main {
     text-align: center;
-    padding: 100px;
+    padding: 80px 10vw;
 }
 
-form {
-    background-color: var(--orange);
-    color: white;
+main h1 {
+    color: var(--main-text);
+    margin-bottom: 30px;
+}
+
+main p {
+    color: var(--secondary-text);
+}
+
+main div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+main form p {
+    margin-bottom: 10px;
+    color: var(--main-text);
+}
+
+/* Formulaires */
+/* Cards pour les données de la box */
+form,
+main article {
+    background-color: var(--card-border);
+    color: var(--card-text);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 50px;
+    padding: 60px;
     margin-top: 20px;
+    border-radius: 20px;
 }
 
-form .ip_address {
+form label, 
+main article p {
+    margin-bottom: 10px;
+    color: var(--main-text);
+}
+
+main article span {
+    font-weight: bold;
+}
+
+form input {
+    text-align: center;
+}
+
+form input[type=number], 
+form input[type=text],
+form select {
+    padding: 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--main-text);
+    background-color: var(--background);
+}
+
+form input[type=number]:focus,
+form select:focus {
+    border-color: var(--active-page);
+    outline: none;
+}
+
+form br {
+    margin: 10px 0;
+}
+
+form span {
+    font-weight: bold;
+}
+
+.octets {
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-footer {
-    background-color: var(--bleu);
+.octets input[type=number] {
+    width: 70px;
+}
+
+form input[type=submit],
+main article button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--button);
     color: white;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+    max-width: 400px;
+}
+
+form input[type=submit]:hover,
+main article button:hover {
+    background-color: var(--button-hover);
+}
+
+/* Footer */
+footer {
+    color: var(--main-text);
     text-align: center;
     padding: 20px;
 }
 
+/* Messsage pour informer l'utilisateur de ses modifications */
 .resultat {
     text-align: center;
 }

@@ -15,13 +15,14 @@
 						echo "<option value='$value' $selected>$value</option>";
 					}
 					echo "</select>";
-					if($i < 3) echo " . ";	// Ajoute le point entre les octets sauf pour le dernier
+					if($i < 3) echo "<span> . </span>";	// Ajoute le point entre les octets sauf pour le dernier
 				}
 			?>
 
 			<br><br>
 		</section>
-		<br><br>
+
+		<br>
 
         <!-- Adresse IP -->
 		<label for="ip">Adresse IP :</label><br>
@@ -29,11 +30,11 @@
 		<!-- 1 input par octet, modifiable ou non en fonction du masque de sous-réseau -->
 		<section class="octets">
 			<input type="number" id="ip_octet1" name="ip_octet1" min="0" max="255" value="<?php echo explode('.', $current_ip)[0]; ?>" />
-			.
+			<span>.</span>
 			<input type="number" id="ip_octet2" name="ip_octet2" min="0" max="255" value="<?php echo explode('.', $current_ip)[1]; ?>" />
-			.
+			<span>.</span>
 			<input type="number" id="ip_octet3" name="ip_octet3" min="0" max="255" value="<?php echo explode('.', $current_ip)[2]; ?>" />
-			.
+			<span>.</span>
 			<input type="number" id="ip_octet4" name="ip_octet4" min="0" max="255" value="<?php echo explode('.', $current_ip)[3]; ?>" />
 			<br><br>
 		</section>
