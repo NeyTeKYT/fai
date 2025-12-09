@@ -1,55 +1,74 @@
-<main>
-	<h1>Bienvenue sur l'interface web de votre box <em>Internet</em> !</h1> <!-- Remplacer "Internet" par le Hostname ? -->
+<main class="container my-4">
+	<h1 class="mb-4 fw-bold text-dark text-center">Administration de la box <em>Internet</em></h1> <!-- Remplacer "Internet" par le Hostname ? -->
 
-	<!-- Div qui contiendra toutes les "cards" avec les inarticleations + fonctionnalités simples à implémenter -->
-	<div>
+	<!-- Div qui contiendra toutes les "cards" avec les Informations + fonctionnalités simples à implémenter -->
+	<div class="row g-4">
 
 		<!-- Configuration du "hostname" de la box Internet -->
-		<form>
-			<label for="hostname">Nom de la box :</label><br>
-			<input type="text" id="hostname" name="hostname" value="<?php echo $current_hostname; ?>">
-			<input type="submit" value="Soumettre">
-		</form>
+		<div class="col-12 col-md-6 col-lg-4">
+        	<div class="card shadow-sm h-100">
+            	<div class="card-header bg-light text-dark fw-bold">Nom de la box</div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        <div class="mb-3">
+                            <label for="hostname" class="form-label">Hostname actuel :</label>
+                            <input type="text" class="form-control" id="hostname" name="hostname" value="<?php echo $current_hostname; ?>">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">Mettre à jour</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-		<!-- Inarticleations générales NON MODIFIABLES sur la box Internet -->
-		<article>
-			<p id="uptime">Fonctionne depuis : <span><?php echo $uptime; ?></span></p>
-			<p id="os-version">Version : <span><?php echo $os_version; ?></span></p>
-			<p id="mac-address">Adresse MAC : <span><?php echo $mac_address; ?></span></p>
-			<p id="date">Date du système : <span><?php echo $system_date; ?></span></p>
-		</article>
+		<!-- Informations générales NON MODIFIABLES sur la box Internet -->
+		<div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light text-dark fw-bold">Informations générales</div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Uptime :</strong> <span><?php echo $uptime; ?></span></p>
+                    <p class="mb-2"><strong>Version :</strong> <span><?php echo $os_version; ?></span></p>
+                    <p class="mb-2"><strong>Adresse MAC :</strong> <span><?php echo $mac_address; ?></span></p>
+                    <p class="mb-0"><strong>Date système :</strong> <span><?php echo $system_date; ?></span></p>
+                </div>
+            </div>
+        </div>
 
-		<!-- Inarticleations sur le réseau -->
-		<article>
-			<p id="ip-address">Adresse IP : <span><?php echo $current_ip; ?></span></p>
-			<p id="netmask">Masque de sous-réseau : <span><?php echo $current_subnet_mask; ?></span></p>
-		</article>
+		<!-- Informations sur Apache -->
+		<div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light text-dark fw-bold">Serveur Web Apache</div>
+                <div class="card-body">
+                    <p class="mb-0"><strong>État :</strong> <?php echo $apache_state_span; ?></p>
+                </div>
+            </div>
+        </div>
 
-		<!-- Inarticleations sur Apache -->
-		<article>
-			<p id="apache-state">Serveur Web : <?php echo $apache_state_span; ?></p>
-		</article>
-
-		<!-- Inarticleations sur DHCP -->
-		<article>
+		<!-- Informations sur DHCP -->
+		<!--<article>
 			<p id="dhcp-state">Serveur DHCP : <?php echo $dhcp_state_span; ?></p>
 			<p id="plage-adresses">Plage d'adresses : </span><?php echo $dhcp_range; ?></span></p>
 			<p id="nb-users-connected">Nombre d'utilisateurs connectés : </span><?php echo $dhcp_leases; ?></span></p>
 			<p id="users-connected">Utilisateurs connectés : <span><?php echo $dhcp_users; ?></span></p>
 			<button>Redémarrer DHCP</button>
-		</article>
+		</article>-->
 
-		<!-- Inarticleations sur DNS -->
-		<article>
+		<!-- Informations sur DNS -->
+		<!--<article>
 			<p id="dns-sate">Serveur DNS : <?php echo $dns_state_span; ?></p>
 			<p id="domain-name">Nom de domain configuré : <span><?php echo $dns_domain; ?></span></p>
 			<button>Redémarrer DNS</button>
-		</article>
+		</article>-->
 
 		<!-- Mettre à jour la box Internet --> 
-		<article>
-			<button>Mettre à jour la box Internet</button>
-		</article>
+		<div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light text-dark fw-bold">Mise à jour</div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <p>Mettre à jour la box Internet vers la dernière version disponible.</p>
+                    <button class="btn btn-dark w-100">Lancer la mise à jour</button>
+                </div>
+            </div>
+        </div>
 
 	</div>
 

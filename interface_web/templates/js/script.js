@@ -52,10 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Listen for changes on the subnet mask
+    // Modifie les valeurs du masque de sous-réseau
     subnet_mask_octets_values.forEach(octet => octet.addEventListener('change', updateIpFields));
 
-    // Run once on page load
     updateIpFields();
 
 });

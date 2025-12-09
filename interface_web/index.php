@@ -1,5 +1,12 @@
 <?php
 
+	// Vérifie si l'utilisateur est connecté ou pas
+	session_start();
+	if(!isset($_SESSION['id'])) {
+		header("Location: control/login.php");
+		exit;
+	}
+
 	include("templates/head.php");	// La balise <head> avec toutes les métadonnées 
 
 	include("templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
@@ -10,16 +17,14 @@
 	$os_version = trim(shell_exec("lsb_release -d | cut -f2"));	// Version de l'OS
 	$mac_address = trim(shell_exec("cat /sys/class/net/eth0/address"));	// Adresse MAC
 	$system_date = trim(shell_exec("date"));	// Date du système
-	$current_ip = trim(shell_exec("cat /etc/network/interfaces | grep 'address' | cut -d' ' -f2"));	// Adresse IP
-    $current_subnet_mask = trim(shell_exec("cat /etc/network/interfaces | grep 'netmask' | cut -d' ' -f2"));	// Masque de sous-réseau
 
 	// État d'Apache
 	$apache_state = trim(shell_exec("systemctl is-active apache2 2>/dev/null"));	
-	if($apache_state == "active") $apache_state_span = "<span class='resultat green'>$apache_state</span>";
-	else $apache_state_span = "<span class='resultat red'>$apache_state</span>";
+	if($apache_state == "active") $apache_state_span = "<span class='text-success fw-bolder'>$apache_state</span>";
+	else $apache_state_span = "<span class='text-danger fw-bolder'>$apache_state</span>";
 
 	// État du DHCP
-	$dhcp_state = trim(shell_exec("systemctl is-active isc-dhcp-server 2>/dev/null"));	
+	/*$dhcp_state = trim(shell_exec("systemctl is-active isc-dhcp-server 2>/dev/null"));	
 	if($dhcp_state == "active") $dhcp_state_span = "<span class='resultat green'>$dhcp_state</span>";
 	else $dhcp_state_span = "<span class='resultat red'>$dhcp_state</span>";
 
@@ -34,7 +39,7 @@
 
 	// Nom de domaine configuré
 	$current_first_name = trim(shell_exec("cat /etc/bind/named.conf.local | grep 'zone' | grep 'ceri.com' | cut -d ' ' -f 2 | cut -d '.' -f 1 | cut -d '\"' -f 2"));
-	$dns_domain = $current_first_name . ".ceri.com";
+	$dns_domain = $current_first_name . ".ceri.com";*/
 
 	include("templates/main_index.php");	// Contenu spécifique à la page d'accueil du FAI
 
