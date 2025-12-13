@@ -1,5 +1,12 @@
 <?php
 
+	// Vérifie si l'utilisateur est connecté ou pas
+	session_start();
+	if(!isset($_SESSION['id'])) {
+		header("Location: ./login.php");
+		exit;
+	}
+
 	$racine_path = "../";	// Chemin vers la racine
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 

@@ -1,10 +1,26 @@
 <?php
 
+	// Vérifie si l'utilisateur est connecté ou pas
+	session_start();
+	if(!isset($_SESSION['id'])) {
+		header("Location: ./login.php");
+		exit;
+	}
+
 	$racine_path = "../";	// Chemin vers la racine
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
+
+	// État du DHCP
+	$dhcp_state = trim(shell_exec("systemctl is-active isc-dhcp-server 2>/dev/null"));	
+	if($dhcp_state == "active") $dhcp_state_span = "<span class='text-success fw-bolder'>$dhcp_state</span>";
+	else $dhcp_state_span = "<span class='text-danger fw-bolder'>$dhcp_state</span>";
+
+	$dhcp_range = trim(shell_exec("grep 'range' /etc/dhcp/dhcpd.conf | awk '{print $2, $3}' | cut -d';' -f1"));	// Plage d'adresses DHCP
+	$dhcp_leases = trim(shell_exec("cat /var/lib/dhcp/dhcpd.leases | grep 'lease' | grep '{' | cut -d' ' -f 2 | uniq | wc -l"));	// Nombre de clients DHCP actifs
+	$dhcp_users = shell_exec("cat /var/lib/dhcp/dhcpd.leases | grep 'client-hostname' | cut -d'-' -f2 | cut -d' ' -f2 | cut -d'\"' -f2 | uniq");	// Liste des clients DHCP
 
 	// Récupère l'adresse IP
 	$get_ip_command = 'cat /etc/network/interfaces | grep "address" | cut -d" " -f2';

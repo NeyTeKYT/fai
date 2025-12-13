@@ -1,10 +1,26 @@
 <?php
 
+	// Vérifie si l'utilisateur est connecté ou pas
+	session_start();
+	if(!isset($_SESSION['id'])) {
+		header("Location: ./login.php");
+		exit;
+	}
+
 	$racine_path = "../";	// Chemin vers la racine
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
+
+	// État du DNS
+	$dns_state = trim(shell_exec("systemctl is-active bind9 2>/dev/null"));	
+	if($dns_state == "active") $dns_state_span = "<span class='text-success fw-bolder'>$dns_state</span>";
+	else $dns_state_span = "<span class='text-danger fw-bolder'>$dns_state</span>";
+
+	// Nom de domaine configuré
+	$current_first_name = trim(shell_exec("cat /etc/bind/named.conf.local | grep 'zone' | grep 'ceri.com' | cut -d ' ' -f 2 | cut -d '.' -f 1 | cut -d '\"' -f 2"));
+	$dns_domain = $current_first_name . ".ceri.com";
 
 	// Récupère le prénom
 	$current_first_name = `cat /etc/bind/named.conf.local | grep "zone" | grep "ceri.com" | cut -d " " -f 2 | cut -d "." -f 1 | cut -d '"' -f 2`;
