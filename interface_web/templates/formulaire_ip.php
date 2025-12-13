@@ -15,9 +15,9 @@
                     <div class="mb-4">
 
 						<!-- Affichage de l'adresse IP actuelle -->
-                        <p class="mb-1"><strong>Adresse IP :</strong> <span><?php echo $current_ip; ?></span></p>
+                        <p class="mb-1"><strong>Adresse actuelle :</strong> <span><?php echo $current_ip; ?></span></p>
 						<!-- Affichage du masque de sous-réseau actuel -->
-                        <p class="mb-0"><strong>Masque de sous-réseau :</strong> <span><?php echo $current_subnet_mask; ?></span></p>
+                        <p class="mb-0"><strong>Sous-réseau actuel :</strong> <span><?php echo $current_subnet_mask; ?></span></p>
 						
                     </div>
 
@@ -28,7 +28,7 @@
 
                         <!-- Configuration du masque de sous-réseau -->
                         <div class="mb-3 text-center">
-                            <label class="form-label fw-bold">Masque de sous-réseau</label>
+                            <label class="form-label fw-bold">Sous-réseau</label>
 
                             <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
                                 <?php 

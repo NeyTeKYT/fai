@@ -1,5 +1,10 @@
 //alert("Hello World !")    // Permet de vérifier que le fichier JavaScript est bien interprété par le navigateur
 
+// Autoriser les tools tips 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
 // Exécuté une fois la page totalement chargée
 document.addEventListener('DOMContentLoaded', function() {
 

@@ -18,7 +18,7 @@
 						<!-- Nom de domaine actuellement configuré -->
 						<p id="domain-name"><strong>Nom de domaine configuré :</strong> <span><?php echo $dns_domain; ?></span></p>
 						<!-- Bouton pour redémarrer le serveur DNS -->
-						<button class="btn btn-dark w-100">Redémarrer DNS</button>
+						<!--<button class="btn btn-dark w-100">Redémarrer DNS</button>-->
 
 					</div>
 					

@@ -1,9 +1,5 @@
 <?php 
 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
     session_start();
 
     $racine_path = "../";	// Chemin vers la racine
@@ -27,13 +23,13 @@
             header("Location: ../index.php");
             exit;
         } 
-        else $error = "Identifiants incorrects.";
+        else $error = "Identifiants incorrects. Vérifiez votre nom d'utilisateur et votre mot de passe.";
 
     }
 
-    if(isset($error)) echo "<p>$error</p>"; 
+    include($racine_path . "templates/login.php");  // Contient le formulaire
 
-    include($racine_path . "templates/login.php"); // contient le formulaire
+    if(isset($error)) echo "<h3 id='login-error' class='text-center text-danger'>$error</h3>";     // Place le message d'erreur en dessous du formulaire
     
     include($racine_path . "templates/footer.php");
 

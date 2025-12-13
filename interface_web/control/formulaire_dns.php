@@ -30,12 +30,12 @@
 
 		$first_name = trim($_POST['first_name']);
 
-		if(empty($first_name)) echo "<h2 class='resultat red'>Le prénom ne peut pas être vide !</h2>";
+		if(empty($first_name)) echo "<h2 class='text-danger fw-bolder text-center'>Le prénom ne peut pas être vide !</h2>";
 		# Un prénom ne peut pas contenir de chiffres et de caractères spéciaux
-		else if(!preg_match('/^[a-zA-Z-]+$/', $first_name)) echo "<h2 class='resultat red'>Le prénom ne doit contenir que des lettres et des tirets !</h2>";
+		else if(!preg_match('/^[a-zA-Z-]+$/', $first_name)) echo "<h2 class='text-danger fw-bolder text-center'>Le prénom ne doit contenir que des lettres et des tirets !</h2>";
 		# Taille maximum d'un préfixe DNS
-		else if(strlen($first_name) > 63) echo "<h2 class='resultat red'>Le prénom doit avoir une longueur inférieure à 63 caractères !</h2>";
-		else if(file_exists("/etc/bind/db.$first_name.ceri.com")) echo "<h2 class='resultat red'>Le prénom a déjà été configuré comme domaine !</h2>";
+		else if(strlen($first_name) > 63) echo "<h2 class='text-danger fw-bolder text-center'>Le prénom doit avoir une longueur inférieure à 63 caractères !</h2>";
+		else if(file_exists("/etc/bind/db.$first_name.ceri.com")) echo "<h2 class='text-danger fw-bolder text-center'>Le prénom a déjà été configuré comme domaine !</h2>";
 		
 		else {
 			# Met le prénom en minuscule : Florent -> florent pour ne pas ping Florent.ceri.com
@@ -44,7 +44,7 @@
 			$script_command = "sudo /home/stud/scripts/dns.sh " . escapeshellarg($first_name_as_dns_prefix);
 			shell_exec($script_command);
 			$current_first_name = $first_name_as_dns_prefix;
-			echo "<h2 class='resultat green'>Le nouveau domaine de la box Internet est $current_first_name.ceri.com !</h2>";
+			echo "<h2 class='text-success fw-bolder text-center'>Le nouveau domaine de la box Internet est $current_first_name.ceri.com !</h2>";
 		}
 
 	}
