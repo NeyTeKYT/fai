@@ -72,10 +72,10 @@
 		$isIpPublic = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);	// Vérifie que l'adresse IP n'est pas une adresse privée
 
 		// Traite les messages d'erreurs
-		if((!$areSubnetMaskOctetsValuesValid) || (!$isSubnetMaskValid)) echo "<h2 class='resultat red'>$subnet_mask n'est pas un masque de sous-réseau !</h2>";
-		else if($isIpValid === false) echo "<h2 class='resultat red'>$ip n'est pas une adresse IPv4 !</h2>";
-		else if($isIpPublic !== false) echo "<h2 class='resultat red'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
-		else if(($current_subnet_mask === $subnet_mask) && ($current_ip === $ip)) echo "<h2 class='resultat red'>Il s'agit de la configuration actuelle !</h2>";
+		if((!$areSubnetMaskOctetsValuesValid) || (!$isSubnetMaskValid)) echo "<h2 class='text-danger fw-bolder text-center'>$subnet_mask n'est pas un masque de sous-réseau !</h2>";
+		else if($isIpValid === false) echo "<h2 class='text-danger fw-bolder text-center'>$ip n'est pas une adresse IPv4 !</h2>";
+		else if($isIpPublic !== false) echo "<h2 class='text-danger fw-bolder text-center'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
+		else if(($current_subnet_mask === $subnet_mask) && ($current_ip === $ip)) echo "<h2 class='text-danger fw-bolder text-center'>Il s'agit de la configuration actuelle !</h2>";
 
 		// Exécute le script pour modifier les informations de l'interface eth1
 		else {
@@ -83,8 +83,8 @@
 			shell_exec($script_command);
 
 			# CES MESSAGES NE S'AFFICHENT PAS, POURQUOI ? 
-			echo "<h2 class='resultat green'>Le masque de sous-réseau est désormais $subnet_mask !</h2>";
-			echo "<h2 class='resultat green'>L'adresse IP est désormais $ip !</h2>";
+			echo "<h2 class='text-success fw-bolder text-center'>Le masque de sous-réseau est désormais $subnet_mask !</h2>";
+			echo "<h2 class='text-success fw-bolder text-center'>L'adresse IP est désormais $ip !</h2>";
 			
 			$current_subnet_mask = $subnet_mask;
 			$current_ip = $ip;

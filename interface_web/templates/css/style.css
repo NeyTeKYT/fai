@@ -1,0 +1,21 @@
+/* Message d'erreur dans le formulaire de connexion */
+#login-error {
+    margin: 10px 0;
+}
+
+/* Empêche la zone de texte de se redimensionner */
+textarea {
+    resize: none;
+}
+
+/* Affichage du tchat de sorte à ce qu'il ait une zone fixe mais puisse s'étendre dans la zone */
+.card-body {
+    max-height: 400px; 
+    overflow-y: auto;
+}
+
+/* Évite les débordements */
+.card-body .rounded {
+    word-break: break-word;
+    line-height: 1.5;
+}

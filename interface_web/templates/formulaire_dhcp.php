@@ -3,8 +3,8 @@
 	<!-- Titre et rôle de la page -->
 	<!-- La version par défaut est la version "débutante" donc j'essaye d'utiliser des termes 
 	 simples, différents pour une personne qui ne serait à l'aise avec les termes techniques -->
-	<h1 class="mb-4 fw-bold text-dark text-center">Formulaire DHCP</h1>
-    <p class="text-muted mb-4 text-center">Ce formulaire permet de modifier la plage d'adresses pour les hôtes DHCP.</p>
+	<h1 class="mb-4 fw-bold text-dark text-center">Appareils</h1>
+    <p class="text-muted mb-4 text-center">Ce formulaire permet de modifier la plage d'adresses des appareils connectés à la box.</p>
 
 	<!-- Affiche la configuration actuelle DHCP -->
 	<div class="d-flex justify-content-center">
@@ -16,15 +16,15 @@
                     <div class="mb-4">
 
 						<!-- État du serveur DHCP -->
-						<p class="mb-1" id="dhcp-state"><strong>Serveur DHCP :</strong> <?php echo $dhcp_state_span; ?></p>
+						<p class="mb-1" id="dhcp-state"><strong>Serveur :</strong> <?php echo $dhcp_state_span; ?></p>
 						<!-- Plage d'adresses actuellement configurées -->
 						<p class="mb-1" id="plage-adresses"><strong>Plage d'adresses :</strong> </span><?php echo $dhcp_range; ?></span></p>
 						<!-- Nombre d'utilisateurs connectés via DHCP -->
-						<p class="mb-1" id="nb-users-connected"><strong>Nombre d'utilisateurs connectés :</strong> </span><?php echo $dhcp_leases; ?></span></p>
+						<p class="mb-1" id="nb-users-connected"><strong>Nombre d'appareils connectés :</strong> </span><?php echo $dhcp_leases; ?></span></p>
 						<!-- Utilisateurs connectés -->
-						<p class="mb-1" id="users-connected"><strong>Utilisateurs connectés :</strong> <span><?php echo $dhcp_users; ?></span></p>
+						<p class="mb-1" id="users-connected"><strong>Appareils connectés :</strong> <span><?php echo $dhcp_users; ?></span></p>
 						<!-- Bouton pour redémarrer le serveur DHCP -->
-						<button class="btn btn-dark w-100 mt-3">Redémarrer DHCP</button>
+						<!--<button class="btn btn-dark w-100 mt-3">Redémarrer le serveur</button>-->
 
 					</div>
 
