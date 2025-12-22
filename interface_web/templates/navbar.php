@@ -14,47 +14,60 @@
       		<!-- Onglets -->
       		<div class="collapse navbar-collapse" id="navbarContent">
        			<ul class="navbar-nav ms-auto mt-2 mb-2 mb-lg-0">
+
+					<!-- Affichage des paramètres de la box seulement pour les clients -->
+					<?php if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'technicien'): ?>
 					
-					<!-- Onglet pour accéder au panel d'administration -->
-					<li class="nav-item">
-            			<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/index.php"
-						data-toggle="tooltip" data-placement="bottom"
-						title="Informations générales et simples fonctionnalités.">Administration</a>
-					</li>
+						<!-- Onglet pour accéder au panel d'administration -->
+						<li class="nav-item">
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/index.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Informations générales et simples fonctionnalités.">Administration</a>
+						</li>
 
-					<!-- Onglet pour accéder au formulaire IP -->
-          			<li class="nav-item">
-            			<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_ip.php"
-						data-toggle="tooltip" data-placement="bottom"
-						title="Configuration de l'adresse IP et du masque de sous-réseau de la box.">Adresse</a>
-					</li>
+						<!-- Onglet pour accéder au formulaire IP -->
+						<li class="nav-item">
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_ip.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Configuration de l'adresse IP et du masque de sous-réseau de la box.">Adresse</a>
+						</li>
 
-					<!-- Onglet pour accéder au formulaire DHCP -->
-					<li class="nav-item">
-						<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dhcp.php"
-						data-toggle="tooltip" data-placement="bottom"
-						title="Configuration du nombre d'appareils à allouer.">Appareils</a>
-					</li>
+						<!-- Onglet pour accéder au formulaire DHCP -->
+						<li class="nav-item">
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dhcp.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Configuration du nombre d'appareils à allouer.">Appareils</a>
+						</li>
 
-					<!-- Onglet pour accéder au formulaire DNS -->
-					<li class="nav-item">
-						<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dns.php"
-						data-toggle="tooltip" data-placement="bottom"
-						title="Configurer le nom de domaine de la box.">Nom</a>
-					</li>
+						<!-- Onglet pour accéder au formulaire DNS -->
+						<li class="nav-item">
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dns.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Configurer le nom de domaine de la box.">Nom</a>
+						</li>
 
-					<!-- Onglet pour accéder à la page de mesure du débit -->
-					<li class="nav-item">
-						<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/diagnostic.php"
-						data-toggle="tooltip" data-placement="bottom"
-						title="Mesurer le débit du réseau.">Diagnostic</a>
-					</li>
+						<!-- Onglet pour accéder à la page de mesure du débit -->
+						<li class="nav-item">
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/diagnostic.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Mesurer le débit du réseau.">Diagnostic</a>
+						</li>
+
+					<?php endif; ?>
 
 					<!-- Onglet pour accéder au forum -->
 					<li class="nav-item">
 						<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/forum.php"
 						data-toggle="tooltip" data-placement="bottom"
 						title="Accès au forum pour poser vos questions.">Aide</a>
+					</li>
+
+					<!-- Onglet pour accéder aux paramètres de l'utilisateur --> 
+					<!-- Sera différent en fonction de si c'est un client / technicien (ne choisira pas son mode de configuration) -->
+					<li class="nav-item">
+						<a class="nav-link btn btn-light text-secondary fw-bold" href="/interface_web/control/parametres.php"
+						data-toggle="tooltip" data-placement="bottom"
+						title="Accès aux paramètres pour modifier vos données et le mode de configuration de la box.">Paramètres</a>
 					</li>
 
           			<!-- Déconnexion -->
