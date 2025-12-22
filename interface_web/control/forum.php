@@ -19,8 +19,14 @@
 
 	include($racine_path . "templates/db.php");
 
+	// Récupération du rôle de l'utilisateur connecté
+	$stmt_role = $pdo->prepare("SELECT role FROM user WHERE id = ?");
+	$stmt_role->execute([$_SESSION['id']]);
+	$user_role = $stmt_role->fetchColumn();
+
 	// Si un message a été publié sur le forum
-	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// N'autorise pas un technicien à ouvrir une discussion = il répond aux problèmes des utilisateurs 
+	if($_SERVER['REQUEST_METHOD'] === 'POST' && $user_role !== 'technicien') {
 		
 		// Récupération du titre de la discussion
 		$titre = trim($_POST['titre']);

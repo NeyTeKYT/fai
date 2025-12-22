@@ -7,7 +7,8 @@
 	<title>AMS Réseau - FAI</title>
 
     <!-- La première version du design de ma box Internet a été développée en CSS pur mais désormais j'utilise Bootstrap -->
-    <!--<link rel="stylesheet" href="/interface_web/templates/css/style.css">-->
+    <!-- Je garde toujours du CSS pour personnaliser mon Bootstrap -->
+    <link rel="stylesheet" href="/interface_web/templates/css/style.css">
 
     <!-- Pour récupérer la Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

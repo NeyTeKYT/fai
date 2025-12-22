@@ -5,37 +5,39 @@
     <p class="text-muted mb-4 text-center">Discutez avec les autres membres et techniciens pour poser vos questions et régler vos problèmes.</p>
 
     <!-- Formulaire pour créer une discussion -->
-    <div class="d-flex justify-content-center">
-        <div class="col-12 col-lg-6">
+    <?php if($user_role !== 'technicien'): ?>
+        <div class="d-flex justify-content-center">
+            <div class="col-12 col-lg-6">
 
-            <div class="card shadow-sm">
+                <div class="card shadow-sm">
 
-                <div class="card-header bg-light text-dark fw-bold text-center">Écrire un message</div>
+                    <div class="card-header bg-light text-dark fw-bold text-center">Écrire un message</div>
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <!-- Formulaire qui une fois envoyé renvoie la page de la discussion -->
-                    <form method="POST">  
+                        <!-- Formulaire qui une fois envoyé renvoie la page de la discussion -->
+                        <form method="POST">  
 
-                        <div class="card-body">
+                            <div class="card-body">
 
-                            <!-- Titre de la discussion -->
-                            <input type="text" name="titre" class="form-control mb-3" placeholder="Titre de la discussion" required>
+                                <!-- Titre de la discussion -->
+                                <input type="text" name="titre" class="form-control mb-3" placeholder="Titre de la discussion" required>
 
-                            <!-- Message -->
-                            <textarea name="message" class="form-control mb-3" rows="4" placeholder="Message" required></textarea>
+                                <!-- Message -->
+                                <textarea name="message" class="form-control mb-3" rows="4" placeholder="Message" required></textarea>
 
-                            <!-- Bouton pour soumettre -->
-                            <button class="btn btn-dark w-100">Envoyer</button>
+                                <!-- Bouton pour soumettre -->
+                                <button class="btn btn-dark w-100">Envoyer</button>
 
-                        </div>
+                            </div>
 
-                    </form>
+                        </form>
+                    </div>
+
                 </div>
-
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 
     <div class="d-flex justify-content-center mt-4">
         <div class="col-12 col-lg-8">
@@ -45,7 +47,7 @@
 
                 <div class="list-group list-group-flush">
 
-                    <?php foreach ($discussions as $discussion): ?>
+                    <?php foreach($discussions as $discussion): ?>
 
                         <a href="discussion.php?id=<?= $discussion['id'] ?>" class="list-group-item list-group-item-action py-3">
 
