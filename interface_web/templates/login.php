@@ -1,5 +1,6 @@
 <main class="container my-5">
 
+    <!-- Titre et slogan de la page -->
     <h1 class="mb-4 fw-bold text-dark text-center">Connectez-vous</h1>
     <p class="text-muted mb-4 text-center">Connectez-vous pour administrer votre box Internet.</p>
 
@@ -7,7 +8,9 @@
         <div class="col-12 col-md-6 col-lg-4">
 
             <div class="card shadow-sm">
-                <div class="card-header bg-light text-dark fw-bold text-center">Connexion</div>
+
+                <!-- Titre de la card -->
+                <div class="card-header bg-light text-dark fw-bold text-center">Formulaire de connexion</div>
 
                 <div class="card-body">
 

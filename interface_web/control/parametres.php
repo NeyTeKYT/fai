@@ -58,7 +58,6 @@
             else {
                 $stmt_update = $pdo->prepare("UPDATE user SET username = ?, mode = ? WHERE id = ?");
                 $stmt_update->execute([$new_username, $mode, $_SESSION['id']]);
-                $_SESSION['mode'] = $mode;  // Change le nouveau mode de la session
             }
             
             // Cas où l'utilisateur souhaite modifier son mot de passe
@@ -67,6 +66,8 @@
                 $stmt_pwd = $pdo->prepare("UPDATE user SET password = ? WHERE id = ?");
                 $stmt_pwd->execute([$hashed, $_SESSION['id']]);
             }
+
+            $_SESSION['mode'] = $mode;  // Change le nouveau mode de la session
 
             $success = "Paramètres mis à jour avec succès.";
         }

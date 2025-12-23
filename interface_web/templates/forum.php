@@ -66,7 +66,7 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6 mt-3 mt-md-0">
+                                <div class="col-12 col-md-6 mt-3 mt-md-0" style="max-height: 400px; overflow-y: auto;">
 
                                     <!-- Ajout d'un badge si le dernier message publié a été publié dans les dernières 24 heures -->
                                     <?php 
