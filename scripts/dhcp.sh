@@ -192,21 +192,35 @@ else
 
 fi
 
+# Sauvegarde des hosts statiques existants
+static_hosts=$(awk '
+	/host [^ ]+ {/ {in_host=1}
+	in_host {print}
+	in_host && /^\}/ {in_host=0}
+	' /etc/dhcp/dhcpd.conf)
+
 # Réecriture du fichier de configuration DHCP
 {
-  	echo "ddns-update-style none;"
-	echo "option domain-name \"example.org\";"
-  	echo "default-lease-time 30;"	
-  	echo "max-lease-time 30;"
-  	echo "log-facility local7;"
-  	echo ""
-	echo "$comment"
-  	echo "subnet $network_address netmask $current_subnet_mask {"
-  	echo "	range $start_ip_in_range $end_ip_in_range;"
-	echo "	option domain-name-servers $current_ip_address;"
-  	echo "}"
-  	echo ""
+    echo "ddns-update-style none;"
+    echo "option domain-name \"example.org\";"
+    echo "default-lease-time 30;"
+    echo "max-lease-time 30;"
+    echo "log-facility local7;"
+    echo ""
+    echo "$comment"
+    echo "subnet $network_address netmask $current_subnet_mask {"
+    echo "    	range $start_ip_in_range $end_ip_in_range;"
+	# Permet d'ajouter le serveur DNS de la box comme résolveur
+    echo "    	option domain-name-servers $current_ip_address;"
+	# Permet d'ajouter la route par défaut vers le routeur (la box) avec la bonne adresse IP
+	echo "		option routers $current_ip_address;"
+    echo ""
+    # Réinjection des hosts statiques
+    echo "$static_hosts"
+    echo "}"
+    echo ""
 } | sudo tee /etc/dhcp/dhcpd.conf > /dev/null
+
 
 # Met à jour le commentaire sur le nombre de machines configurées
 #sudo sed -i "s/^# Nombre de machines configurées :.*/# Nombre de machines configurées : $devices_number/" /etc/dhcp/dhcpd.conf
@@ -227,5 +241,5 @@ fi
 date=$(date '+%Y-%m-%d_%H:%M:%S')
 sudo cp /etc/dhcp/dhcpd.conf /var/backups/FAI/dhcp/dhcpd_$date
 
-# Redémarre le serveur DHCP
-sudo systemctl restart isc-dhcp-server
+# Mise à jour du serveur DHCP
+sudo systemctl reload isc-dhcp-server

@@ -117,7 +117,7 @@
 						<?php endif; ?>
 
 						<!-- Bouton pour soumettre la nouvelle configuration -->
-						<button type="submit" class="btn btn-dark w-100 mt-3">Soumettre</button>
+						<button type="submit" class="btn btn-dark w-100 mt-3">Modifier la plage d'adresses personnalisée</button>
 
 					</form>
 

@@ -89,6 +89,22 @@
 
 						</li>
 
+						<!-- Onglet pour accéder à la configuration NAT -->
+						<li class="nav-item">
+
+							<!-- Nom d'onglet différent en fonction du mode utilisé -->
+							<?php if($_SESSION['mode'] === 'debutant') : ?>
+								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/nat.php"
+								data-toggle="tooltip" data-placement="bottom"
+								title="Accès à Internet et sécurisation du réseau de la box.">Sécurité</a>
+							<?php else : ?>
+								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/nat.php"
+								data-toggle="tooltip" data-placement="bottom"
+								title="Configuration NAT">NAT</a>
+							<?php endif; ?>
+
+						</li>
+
 					<?php endif; ?>
 
 					<!-- Onglet pour accéder au forum -->

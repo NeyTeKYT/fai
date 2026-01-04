@@ -35,8 +35,7 @@
 			// Création d'un nouvel enregistrement dans la table "discussion"
 			$stmt_discussion = $pdo->prepare("
 				INSERT INTO discussion (creator, title) 
-				VALUES (?, ?)
-			");
+				VALUES (?, ?)");
 
 			// Exécute la requête
 			$stmt_discussion->execute([
@@ -49,8 +48,7 @@
 			// Création d'un nouvel enregistrement dans la table "message"
         	$stmt_message = $pdo->prepare("
             	INSERT INTO message (discussion, user, date, message) 
-				VALUES (?, ?, NOW(), ?)
-        	");
+				VALUES (?, ?, NOW(), ?)");
 
 			// Exécute la requête
         	$stmt_message->execute([
@@ -70,8 +68,7 @@
 	// Récupération de toutes les discussions
     $stmt_discussions = $pdo->query("
     	SELECT discussion.id, discussion.title, user.username AS createur FROM discussion 
-		INNER JOIN `user` ON discussion.creator = user.id ORDER BY discussion.id DESC
-    ");
+		INNER JOIN `user` ON discussion.creator = user.id ORDER BY discussion.id DESC");
 
     $discussions = $stmt_discussions->fetchAll();	// Exécute la requête
 
@@ -80,8 +77,7 @@
 
 		// Récupération de la date de création de la discussion
 		$stmt_date_first_message = $pdo->prepare("
-			SELECT date FROM message WHERE discussion = ? ORDER BY id ASC LIMIT 1
-		");
+			SELECT date FROM message WHERE discussion = ? ORDER BY id ASC LIMIT 1");
 
 		$stmt_date_first_message->execute([$discussion['id']]);
 		$date_first_message = $stmt_date_first_message->fetch();
@@ -93,8 +89,7 @@
 		$stmt_last_message = $pdo->prepare("
 			SELECT message.message, message.date, user.username FROM message 
 			INNER JOIN `user` ON message.user = user.id WHERE message.discussion = ?
-			ORDER BY message.id DESC LIMIT 1	
-		");
+			ORDER BY message.id DESC LIMIT 1");
 
 		$stmt_last_message->execute([$discussion['id']]);
 		$last_message = $stmt_last_message->fetch();
@@ -107,8 +102,8 @@
 
 	unset($discussion);
 
-    include($racine_path . "templates/forum.php");
+    include($racine_path . "templates/forum.php");	// Contient le contenu spécifique de la page d'accueil du forum
 
-	include($racine_path . "templates/footer.php");
+	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
 	
 ?>

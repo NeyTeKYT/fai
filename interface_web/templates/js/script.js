@@ -1,5 +1,3 @@
-//alert("Hello World !")    // Permet de vérifier que le fichier JavaScript est bien interprété par le navigateur
-
 // Exécuté une fois la page totalement chargée
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -90,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         });
 
-        // Ajout des nouveaux hôtes
+        // Ajout des nouveaux hôtes connectés
         newHosts.forEach((host, mac) => {
 
             if(!currentHosts.has(mac)) {
@@ -100,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.className = 'list-group-item d-flex justify-content-between align-items-center';
                 item.id = `host-${mac.replace(/:/g, '')}`;
 
-                // Informations de l'hôte
+                // Affichage de l'hôte avec ses informations
                 item.innerHTML = `
                     <div>
                         <strong>${host.hostname}</strong><br>
@@ -111,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
 
-                // Ajout dans la Map
+                // Ajout du nouvel hôte dans la Map
                 hostsList.appendChild(item);
 
             }
@@ -138,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const hosts = Array.isArray(data.hosts) ? data.hosts : [];
                 renderHosts(hosts);
             })
-            .catch(err => console.error('DHCP AJAX error:', err));
+            .catch(err => console.error('Erreur Ajax:', err));
 
     }
 
@@ -147,6 +145,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Récupère les hôtes DHCP
     fetchDhcpHosts();
+
+    // Récupérations des éléments HTML sur lesquels le JavaScript va travailler
+    const dnsCard  = document.getElementById('dns-hosts-card');
+    const dnsTable = document.getElementById('dns-hosts-table');
+    const noDnsMsg = document.getElementById('no-dns-hosts-msg');
+
+    // Cette partie du JavaScript ne concerne que le cas où on est sur le formulaire DNS
+    if(!dnsCard || !dnsTable || !noDnsMsg) return;
+
+    function renderDnsHosts(data) {
+
+        dnsTable.innerHTML = '';
+
+        // Cas où aucun sous-domaine n'est configuré
+        if(!Array.isArray(data.hosts) || data.hosts.length === 0) {
+            dnsCard.classList.add('d-none');
+            noDnsMsg.classList.remove('d-none');
+            return;
+        }
+
+        // Cas où au moins un sous-domaine est configuré
+
+        dnsCard.classList.remove('d-none');
+        noDnsMsg.classList.add('d-none');
+
+        data.hosts.forEach(h => {
+
+            // Création d'une ligne au tableau répertoriant la liste des sous-domaines crées
+            const tr = document.createElement('tr');
+
+            // Affichage de la ligne du sous-domaine dans le tableau
+            tr.innerHTML = `
+                <td>${h.host}.${data.domain}</td>
+                <td>${h.ip}</td>
+                <td class="text-end">
+                    <form method="POST" class="d-inline">
+                        <input type="hidden" name="delete_host" value="${h.host}">
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Supprimer ${h.host} ?')">
+                            Supprimer
+                        </button>
+                    </form>
+                </td>
+            `;
+
+            // Ajout de la ligne au tableau
+            dnsTable.appendChild(tr);
+
+        });
+        
+    }
+
+    // Centralise le processus Ajax pour récupérer les sous-domaines crées
+    function fetchDnsHosts() {
+
+        fetch('/interface_web/control/dns_hosts.php')
+            .then(response => response.json())
+            .then(renderDnsHosts)
+            .catch(err => console.error('Erreur Ajax', err));
+
+    }
+
+    // Récupère sous-domaines DNS
+    fetchDnsHosts();
+
+    // Une requête toutes les 5 secondes
+    setInterval(fetchDnsHosts, 5000);
 
 });
 

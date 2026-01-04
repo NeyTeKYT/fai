@@ -7,6 +7,12 @@
 		exit;
 	}
 
+	// Vérifie la validité de l'ID de la discusssion qui est fourni dans l'URL
+	if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+		header("Location: ./forum.php");
+		exit;
+	}
+
 	$racine_path = "../";	// Chemin vers la racine
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
@@ -14,12 +20,6 @@
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
 
 	include($racine_path . "templates/db.php");
-
-	// Vérifie la validité de l'ID de la discusssion qui est fourni dans l'URL
-	if(!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-		header("Location: ./forum.php");
-		exit;
-	}
 
 	$discussion_id = (int) $_GET['id'];	// Stockage dans une variable pour pouvoir plus facilement manipuler l'ID
 
@@ -31,32 +31,30 @@
 	$stmt_discussion->execute([$discussion_id]);
 	$discussion = $stmt_discussion->fetch();
 
-	// Redirige l'utilisateur vers le forum si la discussion n'a pas pu être récupérée
+	// Affiche un message d'erreur si la discussion avec l'ID passé en paramètre n'a pas bien été récupérée
 	if(!$discussion) {
-		header("Location: forum.php");
+		echo "<div class='alert alert-danger text-center'>Discussion introuvable !</div>";
 		exit;
 	}
 
 	// Cas de suppression d'un message
-	if (isset($_POST['delete_message_id'])) {
+	if(isset($_POST['delete_message_id'])) {
 
-		$message_id = (int) $_POST['delete_message_id'];
+		$message_id = (int) $_POST['delete_message_id'];	// Stockage dans une variable pour pouvoir plus facilement manipuler l'ID
 
 		// Vérifie que le message appartient bien à l'utilisateur connecté
 		$stmt_check = $pdo->prepare("
 			SELECT id FROM message 
-			WHERE id = ? AND user = ?
-		");
+			WHERE id = ? AND user = ?");
 		$stmt_check->execute([$message_id, $_SESSION['id']]);
 
-		if ($stmt_check->fetch()) {
+		if($stmt_check->fetch()) {
 
 			// Soft delete : remplacement du contenu
 			$stmt_delete = $pdo->prepare("
 				UPDATE message 
 				SET message = '[message supprimé]'
-				WHERE id = ?
-			");
+				WHERE id = ?");
 			$stmt_delete->execute([$message_id]);
 		}
 
@@ -90,14 +88,13 @@
 		SELECT message.id, message.message, message.date, user.username, user.id AS user_id, user.role FROM message
 		INNER JOIN user ON message.user = user.id
 		WHERE message.discussion = ?
-		ORDER BY message.id ASC
-	");
+		ORDER BY message.id ASC");
 
 	$stmt_messages->execute([$discussion_id]);
 	$messages = $stmt_messages->fetchAll();
 
-    include($racine_path . "templates/discussion.php");
+    include($racine_path . "templates/discussion.php");	// Contient le template de la discussion
 
-	include($racine_path . "templates/footer.php");
+	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
 	
 ?>

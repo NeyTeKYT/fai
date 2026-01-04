@@ -15,8 +15,8 @@
 
 	// État du DHCP
 	$dhcp_state = trim(shell_exec("systemctl is-active isc-dhcp-server 2>/dev/null"));	
-	if($dhcp_state == "active") $dhcp_state_span = "<span class='text-success fw-bolder'>$dhcp_state</span>";
-	else $dhcp_state_span = "<span class='text-danger fw-bolder'>$dhcp_state</span>";
+	if($dhcp_state == "active") $dhcp_state_span = "<span class='text-success fw-bolder'>actif</span>";
+	else $dhcp_state_span = "<span class='text-danger fw-bolder'>innactif</span>";
 
 	// Par défaut à 0, sera incrémenté / décrémenté automatiquement par Ajax dans le fichier control/dhcp_hosts.php
 	$dhcp_leases = 0;
@@ -112,8 +112,8 @@
 		
 	}
 
-    include($racine_path . "templates/formulaire_dhcp.php");
+    include($racine_path . "templates/formulaire_dhcp.php");	// Contient le formulaire DHCP
 
-	include($racine_path . "templates/footer.php");
+	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
 	
 ?>

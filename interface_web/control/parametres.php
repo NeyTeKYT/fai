@@ -73,6 +73,6 @@
         }
     }
 
-    include($racine_path . "templates/parametres.php");
+    include($racine_path . "templates/parametres.php"); // Contient le contenu spécifique de la page des paramètres
 
-    include($racine_path . "templates/footer.php");
+    include($racine_path . "templates/footer.php"); // Footer avec les informations du créateur

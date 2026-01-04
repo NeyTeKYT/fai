@@ -1,12 +1,19 @@
 <main class="container my-4">
 	
-	<!-- Titre et rôle de la page -->
-	<!-- La version par défaut est la version "débutante" donc j'essaye d'utiliser des termes 
-	 simples, différents pour une personne qui ne serait à l'aise avec les termes techniques -->
-	<h1 class="mb-4 fw-bold text-dark text-center">Adresse de la box</h1>
-    <p class="text-muted mb-4 text-center">Ce formulaire permet de modifier l'adresse de votre box Internet.</p>
+	<!-- Titre et description de la page en fonction du mode de configuration de l'utilisateur -->
+	<?php if($_SESSION['mode'] === 'debutant') : ?>
+		<h1 class="mb-4 fw-bold text-dark text-center">Adresse de la box</h1>
+    	<p class="text-muted mb-4 text-center">Ce formulaire permet de configurer l'adresse de la box.</p>
+	<?php else : ?>
+		<h1 class="mb-4 fw-bold text-dark text-center">IP</h1>
+    	<p class="text-muted mb-4 text-center">Ce formulaire permet de configurer l'adresse IPv4 et le masque de sous-réseau de la box.</p>
+	<?php endif; ?>
+
+    <!-- Affichage du bandeau de notification -->
+	<?php if(!empty($alerts)) foreach($alerts as $alert) echo $alert; ?>
 
 	<div class="d-flex justify-content-center">
+
         <div class="col-12 col-lg-6">
 
             <div class="card shadow-sm">

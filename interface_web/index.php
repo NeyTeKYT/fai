@@ -20,10 +20,10 @@
 
 	// État du serveur web Apache
 	$apache_state = trim(shell_exec("systemctl is-active apache2 2>/dev/null"));	
-	if($apache_state == "active") $apache_state_span = "<span class='text-success fw-bolder'>$apache_state</span>";
-	else $apache_state_span = "<span class='text-danger fw-bolder'>$apache_state</span>";
+	if($apache_state == "active") $apache_state_span = "<span class='text-success fw-bolder'>actif</span>";
+	else $apache_state_span = "<span class='text-danger fw-bolder'>innactif</span>";
 
-	include("templates/main_index.php");	// Contenu spécifique à la page d'accueil du FAI
+	include("templates/main_index.php");	// Contient le contenu spécifique de la page d'accueil du FAI
 
 	include("templates/footer.php");	// Footer avec les informations du créateur
 	

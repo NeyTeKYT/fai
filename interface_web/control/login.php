@@ -8,12 +8,12 @@
 
     include($racine_path . "templates/db.php");
 
-    // Soumission du formulaire de connexion pour se connecter
+    // Soumission du formulaire de connexion
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        # Stockage des champs entrés par l'utilisateur dans des variables
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        // Récupération des informations et stockage dans des variables
+        $username = $_POST['username']; // Nom d'utilisateur
+        $password = $_POST['password']; // Mot de passe
 
         // Récupération d'un utilisateur existant dans la BDD ayant ce nom d'utilisateur
         $stmt = $pdo->prepare("SELECT * FROM user WHERE username = ?");
@@ -27,14 +27,11 @@
             exit;
         } 
 
-        else $error = "Identifiants incorrects.";   // Texte pour le bandeau de notification
+        else $alert = "<div class='alert alert-danger text-center'>Identifiants incorrects !</div>";   // Texte pour le bandeau de notification
 
     }
 
     include($racine_path . "templates/login.php");  // Contient le formulaire de connexion
-
-    // Mise en place d'un bandeau de notification pour annoncer une erreur à l'utilisateur en dessous du formulaire
-    if(isset($error)) echo "<h3 id='login-error' class='alert alert-danger text-center'>$error</h3>";
     
     include($racine_path . "templates/footer.php"); // Footer avec les informations du créateur
 

@@ -13,8 +13,7 @@
 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
 
-	// Récupération du masque de sous-réseau actuel 
-	// FORMAT 255.255.255.0 PAS /24
+	// Récupération du masque de sous-réseau actuel AU FORMAT 255.255.255.0 PAS /24
 	$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
 	$current_subnet_mask = trim(shell_exec($get_subnet_mask_command));
 	
@@ -30,6 +29,8 @@
 
 	// Cas d'envoi du formulaire
 	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+		$alerts = [];	// Stockage des messages du bandeau de notification dans un tableau
 
 		// Récupère les valeurs des 4 octets du masque de sous-réseau
 		$subnet_mask_octets = [
@@ -72,10 +73,10 @@
 		$isIpPublic = filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE);	// Vérifie que l'adresse IP n'est pas une adresse privée
 
 		// Traite les messages d'erreurs
-		if((!$areSubnetMaskOctetsValuesValid) || (!$isSubnetMaskValid)) echo "<h2 class='text-danger fw-bolder text-center'>$subnet_mask n'est pas un masque de sous-réseau !</h2>";
-		else if($isIpValid === false) echo "<h2 class='text-danger fw-bolder text-center'>$ip n'est pas une adresse IPv4 !</h2>";
-		else if($isIpPublic !== false) echo "<h2 class='text-danger fw-bolder text-center'>$ip n'est pas une adresse privée !</h2>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
-		else if(($current_subnet_mask === $subnet_mask) && ($current_ip === $ip)) echo "<h2 class='text-danger fw-bolder text-center'>Il s'agit de la configuration actuelle !</h2>";
+		if((!$areSubnetMaskOctetsValuesValid) || (!$isSubnetMaskValid)) $alerts[] = "<div class='alert alert-danger text-center'>$subnet_mask n'est pas un masque de sous-réseau !</div>";
+		else if($isIpValid === false) $alerts[] = "<div class='alert alert-danger text-center'>$ip n'est pas une adresse IPv4 !</div>";
+		else if($isIpPublic !== false) $alerts[] = "<div class='alert alert-danger text-center'>$ip n'est pas une adresse privée !</div>";	// Il faut que l'adresse IPv4 soit privée car eth1 est une interface "Réseau Interne"
+		else if(($current_subnet_mask === $subnet_mask) && ($current_ip === $ip)) $alerts[] = "<div class='alert alert-danger text-center'>Il s'agit de la configuration actuelle !</div>";
 
 		// Exécute le script pour modifier les informations de l'interface eth1
 		else {
@@ -91,10 +92,8 @@
 		}
 	}
 
-	//echo nl2br(file_get_contents('/etc/network/interfaces'));	// Affichage du fichier /etc/network/interfaces pour bien montrer la modification effectuée
+	include($racine_path . "templates/formulaire_ip.php");	// Contient le formulaire IP
 
-	include($racine_path . "templates/formulaire_ip.php");
-
-	include($racine_path . "templates/footer.php");
+	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
 	
 ?>
