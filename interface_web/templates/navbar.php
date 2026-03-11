@@ -1,3 +1,10 @@
+<?php 
+
+	// Stockage du mode de l'utilisateur, sinon il aura par défaut le mode débutant de configuré.
+	$mode = $mode ?? 'debutant';
+
+?>
+
 <header>
   	<nav class="navbar navbar-expand-lg navbar-light bg-light">
     	<div class="container">
@@ -29,7 +36,7 @@
 						<li class="nav-item">
 
 							<!-- Nom d'onglet différent en fonction du mode utilisé -->
-							<?php if($_SESSION['mode'] === 'debutant') : ?>
+							<?php if($mode === 'debutant') : ?>
 								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_ip.php"
 								data-toggle="tooltip" data-placement="bottom"
 								title="Configuration de l'adresse et du sous-réseau de la box.">Adresse</a>
@@ -45,7 +52,7 @@
 						<li class="nav-item">
 
 							<!-- Nom d'onglet différent en fonction du mode utilisé -->
-							<?php if($_SESSION['mode'] === 'debutant') : ?>
+							<?php if($mode === 'debutant') : ?>
 								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dhcp.php"
 								data-toggle="tooltip" data-placement="bottom"
 								title="Configuration du nombre d'appareils à allouer.">Appareils</a>
@@ -61,7 +68,7 @@
 						<li class="nav-item">
 
 							<!-- Nom d'onglet différent en fonction du mode utilisé -->
-							<?php if($_SESSION['mode'] === 'debutant') : ?>
+							<?php if($mode === 'debutant') : ?>
 								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/formulaire_dns.php"
 								data-toggle="tooltip" data-placement="bottom"
 								title="Configuration du nom de la box.">Nom</a>
@@ -77,7 +84,7 @@
 						<li class="nav-item">
 
 							<!-- Nom d'onglet différent en fonction du mode utilisé -->
-							<?php if($_SESSION['mode'] === 'debutant') : ?>
+							<?php if($mode === 'debutant') : ?>
 								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/diagnostic.php"
 								data-toggle="tooltip" data-placement="bottom"
 								title="Mesurer la qualité du réseau.">Diagnostic</a>
@@ -93,7 +100,7 @@
 						<li class="nav-item">
 
 							<!-- Nom d'onglet différent en fonction du mode utilisé -->
-							<?php if($_SESSION['mode'] === 'debutant') : ?>
+							<?php if($mode === 'debutant') : ?>
 								<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/nat.php"
 								data-toggle="tooltip" data-placement="bottom"
 								title="Accès à Internet et sécurisation du réseau de la box.">Sécurité</a>
@@ -111,7 +118,7 @@
 					<li class="nav-item">
 
 						<!-- Nom d'onglet différent en fonction du mode utilisé -->
-						<?php if($_SESSION['mode'] === 'debutant') : ?>
+						<?php if($mode === 'debutant') : ?>
 							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/forum.php"
 							data-toggle="tooltip" data-placement="bottom"
 							title="Réglez vos problèmes et posez vos questions aux techniciens et autres clients du FAI.">Aide</a>
@@ -119,6 +126,22 @@
 							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/forum.php"
 							data-toggle="tooltip" data-placement="bottom"
 							title="Accès au forum pour poser vos questions et régler vos problèmes.">Forum</a>
+						<?php endif; ?>
+
+					</li>
+
+					<!-- Onglet pour accéder aux mails -->
+					<li class="nav-item">
+
+						<!-- Nom d'onglet différent en fonction du mode utilisé -->
+						<?php if($mode === 'debutant') : ?>
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/mails.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Accès à vos courriers.">Courriers</a>
+						<?php else : ?>
+							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/mails.php"
+							data-toggle="tooltip" data-placement="bottom"
+							title="Accès à vos mails.">Mails</a>
 						<?php endif; ?>
 
 					</li>

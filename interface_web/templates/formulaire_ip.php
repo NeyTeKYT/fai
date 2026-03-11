@@ -5,7 +5,7 @@
 		<h1 class="mb-4 fw-bold text-dark text-center">Adresse de la box</h1>
     	<p class="text-muted mb-4 text-center">Ce formulaire permet de configurer l'adresse de la box.</p>
 	<?php else : ?>
-		<h1 class="mb-4 fw-bold text-dark text-center">IP</h1>
+		<h1 class="mb-4 fw-bold text-dark text-center">Formulaire IP</h1>
     	<p class="text-muted mb-4 text-center">Ce formulaire permet de configurer l'adresse IPv4 et le masque de sous-réseau de la box.</p>
 	<?php endif; ?>
 
@@ -21,11 +21,18 @@
                 <div class="card-body">
                     <div class="mb-4">
 
-						<!-- Affichage de l'adresse IP actuelle -->
-                        <p class="mb-1"><strong>Adresse actuelle :</strong> <span><?php echo $current_ip; ?></span></p>
-						<!-- Affichage du masque de sous-réseau actuel -->
-                        <p class="mb-0"><strong>Sous-réseau actuel :</strong> <span><?php echo $current_subnet_mask; ?></span></p>
-						
+                        <?php if($_SESSION['mode'] === 'debutant') : ?>
+                            <!-- Affichage de l'adresse IP actuelle -->
+                            <p class="mb-1"><strong>Adresse actuelle :</strong> <span><?php echo $current_ip; ?></span></p>
+                            <!-- Affichage du masque de sous-réseau actuel -->
+                            <p class="mb-0"><strong>Sous-réseau actuel :</strong> <span><?php echo $current_subnet_mask; ?></span></p>
+						<?php else : ?>
+                            <!-- Affichage de l'adresse IP actuelle -->
+                            <p class="mb-1"><strong>Adresse IP actuelle :</strong> <span><?php echo $current_ip; ?></span></p>
+                            <!-- Affichage du masque de sous-réseau actuel -->
+                            <p class="mb-0"><strong>Masque de sous-réseau actuel :</strong> <span><?php echo $current_subnet_mask; ?></span></p>
+                        <?php endif; ?>
+
                     </div>
 
                     <hr>
@@ -35,7 +42,12 @@
 
                         <!-- Configuration du masque de sous-réseau -->
                         <div class="mb-3 text-center">
-                            <label class="form-label fw-bold">Sous-réseau</label>
+
+                            <?php if($_SESSION['mode'] === 'debutant') : ?>
+                                <label class="form-label fw-bold">Sous-réseau</label>
+                            <?php else : ?>
+                                <label class="form-label fw-bold">Masque de sous-réseau</label>
+                            <?php endif; ?>
 
                             <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
                                 <?php 
@@ -54,7 +66,12 @@
 
                         <!-- Configuration de l'adresse IP -->
                         <div class="mb-3 text-center">
-                            <label class="form-label fw-bold">Adresse</label>
+
+                            <?php if($_SESSION['mode'] === 'debutant') : ?> 
+                                <label class="form-label fw-bold">Adresse</label>
+                            <?php else : ?>
+                                <label class="form-label fw-bold">Adresse IP</label>
+                            <?php endif; ?>
 
                             <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
 

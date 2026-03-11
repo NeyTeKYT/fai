@@ -83,9 +83,7 @@
 			$script_command = "sudo /home/stud/scripts/ip.sh " . escapeshellarg($ip) . ' ' . escapeshellarg($subnet_mask);
 			shell_exec($script_command);
 
-			# CES MESSAGES NE S'AFFICHENT PAS, POURQUOI ? 
-			echo "<h2 class='text-success fw-bolder text-center'>Le masque de sous-réseau est désormais $subnet_mask !</h2>";
-			echo "<h2 class='text-success fw-bolder text-center'>L'adresse IP est désormais $ip !</h2>";
+			echo "<div class='alert alert-success text-center'>Le masque de sous-réseau est désormais <strong>$subnet_mask</strong> !<br>L'adresse IP est désormais <strong>$ip</strong></div>";
 			
 			$current_subnet_mask = $subnet_mask;
 			$current_ip = $ip;

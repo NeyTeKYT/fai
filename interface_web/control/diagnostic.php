@@ -75,11 +75,11 @@
 				$quality_msg = "Votre connexion Internet est lente.";
 				$verdict_msg = "La navigation peut être difficile et le streaming HD est limité.";
 			}
-			elseif($download_speed < 200) {
+			else if($download_speed < 200) {
 				$quality_msg = "Votre connexion Internet est correcte.";
 				$verdict_msg = "Vous pouvez naviguer confortablement et regarder des vidéos en HD.";
 			}
-			elseif($download_speed < 1000) {
+			else if($download_speed < 1000) {
 				$quality_msg = "Votre connexion Internet est très bonne.";
 				$verdict_msg = "Vous pouvez regarder des vidéos 4K, jouer en ligne et utiliser plusieurs appareils simultanément.";
 			}

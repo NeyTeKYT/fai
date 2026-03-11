@@ -185,8 +185,6 @@ else
 		exit 10
 	fi
 
-
-
 	# Mise en place d'un commentaire pour connaître dans le fichier la configuration de l'utilisateur
 	comment="# Mode avancé : configurer sa propre plage d'adresses"
 

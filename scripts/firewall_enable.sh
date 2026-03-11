@@ -8,7 +8,6 @@ iptables -P INPUT ACCEPT
 iptables -P OUTPUT ACCEPT
 iptables -P FORWARD DROP
 
-# Autorise la boucle locale
 iptables -A INPUT -i lo -j ACCEPT
 
 # Autorise les connexions établies
