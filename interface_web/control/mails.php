@@ -29,27 +29,30 @@
 		if($destinataire && $sujet && $message) {
 
 			// Additional headers
-			$headers = "From: box@ceri.com" . "\r\n" .
-			"To: $destinataire" . "\r\n" .
-			"Subject: $sujet" . "\r\n" .
-			"Content-Type: text/plain; charset=UTF-8" . "\r\n" . "$message";
+			$headers = "From: box@ceri.com\r\n" . 
+			"To: $destinataire\r\n" .
+			"Subject: $sujet\r\n" .
+			"Content-Type: text/plain; charset=UTF-8\r\n" ;
 
 			// Vérification de l'envoi du mail
 			if(mail($destinataire, $sujet, $message, $headers)) echo "<div class='alert alert-success text-center'>Votre mail a bien été envoyé !</div>";
 			else echo "<div class='alert alert-danger text-center'>Une erreur est survenue lors de l'envoi du mail !</div>";
-			
-			imap_append($imap_sent, $imap_fai . "Sent", $headers);	// Ajoute le mail dans le dossier "Sent" des mails envoyés
+
+			// Ajoute le mail dans le dossier "Sent" des mails envoyés
+			$mail_to_save = $headers . $message;
+			imap_append($imap_sent, $imap_fai . "Sent", $mail_to_save);
 
 		}
 
 	}
 
-	if(isset($_POST['supprimer'])) {	// Cas de suppression d'un mail
+	if(isset($_POST['supprimer_recu'])) {	// Cas de suppression d'un mail reçu
 
-		$id = (int) $_POST['supprimer'];	// Stockage de l'ID du mail à supprimer
+		$id = (int) $_POST['supprimer_recu'];	// Stockage de l'ID du mail à supprimer
 
-		imap_delete($imap, $id, FT_UID);
-		imap_expunge($imap);
+		// Suppression du mail
+		if(imap_delete($imap, $id) && imap_expunge($imap)) echo "<div class='alert alert-success text-center'>Votre mail reçu a bien été supprimé !</div>";
+		else echo "<div class='alert alert-danger text-center'>Une erreur est survenue lors de la suppression du mail !</div>";
 
 	}
 
@@ -92,6 +95,16 @@
 
 		$mails_envoyes = [];
 		$emails_sent = imap_search($imap_sent, 'ALL');
+
+		if(isset($_POST['supprimer_envoye'])) {	// Cas de suppression d'un mail envoyé
+
+			$id = (int) $_POST['supprimer_envoye'];	// Stockage de l'ID du mail à supprimer
+
+			// Suppression du mail
+			if(imap_delete($imap_sent, $id) && imap_expunge($imap_sent)) echo "<div class='alert alert-success text-center'>Votre mail envoyé a bien été supprimé !</div>";
+			else echo "<div class='alert alert-danger text-center'>Une erreur est survenue lors de la suppression du mail !</div>";
+
+		}
 
 		if($emails_sent) {
 

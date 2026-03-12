@@ -137,7 +137,7 @@
 						<?php if($mode === 'debutant') : ?>
 							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/mails.php"
 							data-toggle="tooltip" data-placement="bottom"
-							title="Accès à vos courriers.">Courriers</a>
+							title="Accès à votre messagerie en ligne.">Messagerie</a>
 						<?php else : ?>
 							<a class="nav-link btn btn-light text-dark fw-bold" href="/interface_web/control/mails.php"
 							data-toggle="tooltip" data-placement="bottom"

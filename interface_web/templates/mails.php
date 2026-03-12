@@ -1,7 +1,7 @@
 <main class="container my-4">
 
     <!-- Titre et rôle de la page -->
-    <h1 class="mb-4 fw-bold text-dark text-center">Boîte mail</h1>
+    <h1 class="mb-4 fw-bold text-dark text-center">Messagerie</h1>
     <p class="text-muted mb-4 text-center">Consultez vos mails, envoyez-en de nouveaux et gérez votre messagerie.</p>
 
     <!-- Card pour envoyer un mail -->
@@ -53,8 +53,8 @@
 
                         <?php foreach($mails_envoyes as $mail): ?>
 
-                            <!-- Lorsque l'on clique sur le mail, on nous renvoie vers une page avec le mail en entier -->
-                            <a href="mail.php?id=<?= $mail['id'] ?>" class="list-group-item list-group-item-action py-3">
+                            <!-- Lorsque l'on clique sur le mail, on nous renvoie vers une page avec les détails du mail envoyé en entier -->
+                            <a href="mail.php?type=envoye&id=<?= $mail['id'] ?>" class="list-group-item list-group-item-action py-3">
 
                                 <div class="d-flex justify-content-between align-items-center">
 
@@ -68,6 +68,16 @@
                                             À <strong><?= htmlspecialchars($mail['destinataire']) ?></strong>
                                             <?= $mail['date'] ? "le " . date('d/m/Y H:i', strtotime($mail['date'])) : '' ?>
                                         </div>
+
+                                    </div>
+
+                                    <div class="d-flex justify-content-end gap-2">
+
+                                        <!-- Bouton pour supprimer le mail -->
+                                        <form method="POST">
+                                            <input type="hidden" name="supprimer_envoye" value="<?= $mail['id'] ?>">
+                                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                        </form>
 
                                     </div>
 
@@ -96,8 +106,8 @@
 
                         <?php foreach($mails_recus as $mail): ?>
 
-                            <!-- Lorsque l'on clique sur le mail, on nous renvoie vers une page avec le mail en entier -->
-                            <a href="mail.php?id=<?= $mail['id'] ?>" class="list-group-item list-group-item-action py-3">
+                            <!-- Lorsque l'on clique sur le mail, on nous renvoie vers une page avec les détails du mail en entier -->
+                            <a href="mail.php?type=recu&id=<?= $mail['id'] ?>" class="list-group-item list-group-item-action py-3">
 
                                 <div class="d-flex justify-content-between align-items-center">
 
@@ -111,16 +121,21 @@
                                         <!-- Sujet du mail -->
                                         <h6 class="mb-1 text-dark"><?= htmlspecialchars($mail['sujet']) ?></h6>
 
-                                        <div class="text-muted small">
-                                            De <strong><?= htmlspecialchars($mail['expediteur']) ?></strong>
-                                            <?= $mail['date'] ? "le " . date('d/m/Y H:i', strtotime($mail['date'])) : '' ?>
-                                        </div>
+                                        <!-- Expéditeur du mail -->
+                                        <?php if($mail['expediteur']): ?>
+                                            <div class="text-muted small">
+                                                De <strong><?= htmlspecialchars($mail['expediteur']) ?></strong>
+                                                <?php if($mail['date']): ?>
+                                                    le <?= htmlspecialchars($mail['date']) ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
 
                                     </div>
 
-                                    <!-- Actions -->
                                     <div class="d-flex justify-content-end gap-2">
 
+                                        <!-- Bouton pour marquer le mail comme lu / non lu -->
                                         <form method="POST">
                                             <input type="hidden" name="toggle_lu" value="<?= $mail['id'] ?>">
                                             <button class="btn btn-sm btn-outline-secondary">
@@ -128,11 +143,10 @@
                                             </button>
                                         </form>
 
+                                        <!-- Bouton pour supprimer le mail -->
                                         <form method="POST">
-                                            <input type="hidden" name="supprimer" value="<?= $mail['id'] ?>">
-                                            <button class="btn btn-sm btn-outline-danger">
-                                                Supprimer
-                                            </button>
+                                            <input type="hidden" name="supprimer_recu" value="<?= $mail['id'] ?>">
+                                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
                                         </form>
 
                                     </div>
