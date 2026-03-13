@@ -21,10 +21,30 @@
                             <div class="card-body">
 
                                 <!-- Titre de la discussion -->
-                                <input type="text" name="titre" class="form-control mb-3" placeholder="Titre de la discussion" required>
+                                <div class="d-flex align-items-center">
+
+                                    <!-- Bouton pour lancer l'algorithme pour chercher des titres similaires dans la BDD -->
+                                    <form method="POST">
+
+                                        <input type="text" name="titre" class="form-control mb-3 me-3" placeholder="Titre de la discussion" required>
+                                        <button class="btn btn-sm btn-outline-info">IA</button>
+
+                                    </form>
+
+                                </div>
 
                                 <!-- Message -->
-                                <textarea name="message" class="form-control mb-3" rows="4" placeholder="Message" required></textarea>
+                                <div class="d-flex align-items-center">
+                                    
+                                    <!-- Bouton pour lancer l'algorithme pour chercher des titres similaires dans la BDD -->
+                                    <form method="POST">
+
+                                        <textarea name="message" class="form-control mb-3 me-3" rows="4" placeholder="Message" required></textarea>
+                                        <button class="btn btn-sm btn-outline-info">IA</button>
+
+                                    </form>
+
+                                </div>
 
                                 <!-- Bouton pour soumettre -->
                                 <button class="btn btn-dark w-100">Envoyer</button>
