@@ -5,7 +5,7 @@
     <p class="text-muted mb-4 text-center">Discutez avec les autres membres et techniciens pour poser vos questions et régler vos problèmes.</p>
 
     <!-- Formulaire pour créer une discussion -->
-    <?php if($user_role !== 'technicien'): ?>
+    <?php if($role_utilisateur !== 'technicien'): ?>
         <div class="d-flex justify-content-center">
             <div class="col-12 col-lg-6">
 
@@ -24,12 +24,8 @@
                                 <div class="d-flex align-items-center">
 
                                     <!-- Bouton pour lancer l'algorithme pour chercher des titres similaires dans la BDD -->
-                                    <form method="POST">
-
-                                        <input type="text" name="titre" class="form-control mb-3 me-3" placeholder="Titre de la discussion" required>
-                                        <button class="btn btn-sm btn-outline-info">IA</button>
-
-                                    </form>
+                                    <input type="text" name="titre" class="form-control mb-3 me-3" placeholder="Titre de la discussion">
+                                    <button type="submit" name="titre_ia" class="btn btn-sm btn-outline-info">IA</button>
 
                                 </div>
 
@@ -37,17 +33,13 @@
                                 <div class="d-flex align-items-center">
                                     
                                     <!-- Bouton pour lancer l'algorithme pour chercher des titres similaires dans la BDD -->
-                                    <form method="POST">
-
-                                        <textarea name="message" class="form-control mb-3 me-3" rows="4" placeholder="Message" required></textarea>
-                                        <button class="btn btn-sm btn-outline-info">IA</button>
-
-                                    </form>
+                                    <textarea name="message" class="form-control mb-3 me-3" rows="4" placeholder="Message"></textarea>
+                                    <button type="submit" name="message_ia" class="btn btn-sm btn-outline-info">IA</button>
 
                                 </div>
 
                                 <!-- Bouton pour soumettre -->
-                                <button class="btn btn-dark w-100">Envoyer</button>
+                                <button type="submit" name="creer_discussion" class="btn btn-dark w-100">Envoyer</button>
 
                             </div>
 
