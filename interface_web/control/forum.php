@@ -14,8 +14,9 @@
 	include($racine_path . "utils/forum/creer_discussion.php");	// Fonction qui ajoute une discussion (titre + message) dans la BDD
 	include($racine_path . "utils/forum/recuperer_discussions.php");	// Fonction qui retourne toutes les discussions existantes dans la BDD
 
+	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
+
 	// Récupération du rôle de l'utilisateur connecté
-	$id_utilisateur = $_SESSION['id'];
 	$stmt = $pdo->prepare("SELECT role FROM user WHERE id = ?");
 	$stmt->execute([$id_utilisateur]);
 	$role_utilisateur = $stmt->fetchColumn();

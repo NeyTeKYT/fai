@@ -49,7 +49,7 @@
                         <div>
                             <?php if ($is_me && $message['message'] !== '[message supprimé]'): ?>
                                 <form method="POST" class="ms-auto">
-                                    <input type="hidden" name="delete_message_id" value="<?= $message['id'] ?>">
+                                    <input type="hidden" name="supprimer_message" value="<?= $message['id'] ?>">
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce message ?');">Supprimer</button>
                                 </form>
                             <?php endif; ?>
