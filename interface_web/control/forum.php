@@ -14,6 +14,7 @@
 	require $racine_path . "utils/discussion/supprimer_discussion.php";	// Fonction qui supprime une discussion de la BDD
 	require $racine_path . "utils/forum/creer_discussion.php";	// Fonction qui ajoute une discussion (titre + message) dans la BDD
 	require $racine_path . "utils/forum/recuperer_discussions.php";	// Fonction qui retourne toutes les discussions existantes dans la BDD
+	require $racine_path . "utils/forum/calculer_vecteur.php";	// Fonction qui calcule le vecteur binaire d'un texte (titre ou message) en fonction du vocabulaire
 
 	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
 
@@ -28,7 +29,7 @@
 		// Algorithme de traitement de chaines de caractères sur le titre
 		if(isset($_POST['titre_ia'])) {
 
-			// Lance l'algorithme 
+			calculer_vecteur($_POST['titre_ia']);
 
 		}
 		
