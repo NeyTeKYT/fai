@@ -9,10 +9,11 @@
 
 	$racine_path = "../";	// Chemin vers la racine
 
-	include($racine_path . "templates/db.php");
+	require $racine_path . "templates/db.php";
 
-	include($racine_path . "utils/forum/creer_discussion.php");	// Fonction qui ajoute une discussion (titre + message) dans la BDD
-	include($racine_path . "utils/forum/recuperer_discussions.php");	// Fonction qui retourne toutes les discussions existantes dans la BDD
+	require $racine_path . "utils/discussion/supprimer_discussion.php";	// Fonction qui supprime une discussion de la BDD
+	require $racine_path . "utils/forum/creer_discussion.php";	// Fonction qui ajoute une discussion (titre + message) dans la BDD
+	require $racine_path . "utils/forum/recuperer_discussions.php";	// Fonction qui retourne toutes les discussions existantes dans la BDD
 
 	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
 
@@ -45,8 +46,8 @@
 
 	$discussions = recuperer_discussions();
 
-	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
-	include($racine_path . "templates/navbar.php");	// Barre de navigation pour se déplacer entre les pages
+	require $racine_path . "templates/head.php";	// La balise <head> avec toutes les métadonnées 
+	require $racine_path . "templates/navbar.php";	// Barre de navigation pour se déplacer entre les pages
 
 	// Vérifie si une action a été effectuée par l'utilisateur 
 	if(isset($_SESSION['message'])) {
@@ -54,7 +55,7 @@
 		unset($_SESSION['message']);	// Supprime le message pour qu'il ne soit diffusé qu'une seule fois
 	}
 
-    include($racine_path . "templates/forum/forum.php");	// Contient le contenu spécifique de la page d'accueil du forum
-	include($racine_path . "templates/footer.php");	// Footer contenant les informations sur le créateur
+    require $racine_path . "templates/forum/forum.php";	// Contient le contenu spécifique de la page d'accueil du forum
+	require $racine_path . "templates/footer.php";	// Footer contenant les informations sur le créateur
 	
 ?>
