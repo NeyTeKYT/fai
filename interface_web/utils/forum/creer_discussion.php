@@ -23,6 +23,9 @@
 			$message
 		]);
 
+		// Stocke le message d'information dans une variable de la session de l'utilisateur pour pouvoir le récupérer sur une autre page
+		$_SESSION['message'] = "<div class='alert alert-success text-center'>Votre discussion a bien été crée !</div>";
+
         // Redirection vers la discussion pour suivre les messages envoyés
 		header("Location: " . $racine_path . "discussion.php?id=" . $id_discussion);
 		exit;

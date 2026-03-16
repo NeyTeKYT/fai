@@ -26,6 +26,14 @@
                 $stmt = $pdo->prepare("DELETE FROM discussion WHERE id = ?");
                 $stmt->execute([$id_discussion]);
 
+                // Stocke le message d'information dans une variable de la session de l'utilisateur pour pouvoir le récupérer sur une autre page
+                $_SESSION['message'] = 
+                    "<div class='alert alert-success text-center'>
+                        Votre message a bien été supprimé !<br>
+                        La discussion a également été supprimée car il s'agissait du dernier message de cette discussion !
+                    </div>";
+
+                // Redirection vers le forum si la discussion ne contient plus de message
                 header("Location: forum.php");
 		        exit;
 
@@ -33,6 +41,10 @@
 
 		}
 
+        // Stocke le message d'information dans une variable de la session de l'utilisateur pour pouvoir le récupérer sur une autre page
+		$_SESSION['message'] = "<div class='alert alert-success text-center'>Votre message a bien été supprimé !</div>";
+
+        // Redirection vers la discussion si il reste encore au moins 1 message
 		header("Location: discussion.php?id=" . $id_discussion);
 		exit;
     

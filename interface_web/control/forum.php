@@ -24,28 +24,22 @@
 	// N'autorise pas un technicien à ouvrir une discussion = il répond aux problèmes des utilisateurs 
 	if($_SERVER['REQUEST_METHOD'] === 'POST' && $role_utilisateur !== 'technicien') {
 
+		// Algorithme de traitement de chaines de caractères sur le titre
 		if(isset($_POST['titre_ia'])) {
 
-			$titre = trim($_POST['titre']);	// Titre de la discussion
 			// Lance l'algorithme 
 
 		}
 		
+		// Algorithme de traitement de chaines de caractères sur le message
 		elseif(isset($_POST['message_ia'])) {
 
-			$message = trim($_POST['message']);	// Message envoyé
 			// Lance l'algorithme
 
 		}
 
-		elseif(isset($_POST['creer_discussion'])) {
-
-			$titre = trim($_POST['titre']);	// Titre de la discussion
-			$message = trim($_POST['message']);	// Message envoyé
-
-			if(($titre !== "") && ($message !== "")) creer_discussion($titre, $message, $id_utilisateur);
-
-		}
+		// Création d'une discussion 
+		elseif(isset($_POST['creer_discussion'])) creer_discussion($_POST['titre'], $_POST['message'], $id_utilisateur);
 
 	}
 
@@ -53,7 +47,14 @@
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour se déplacer entre les pages
-    include($racine_path . "templates/forum.php");	// Contient le contenu spécifique de la page d'accueil du forum
+
+	// Vérifie si une action a été effectuée par l'utilisateur 
+	if(isset($_SESSION['message'])) {
+		echo $_SESSION['message'];
+		unset($_SESSION['message']);	// Supprime le message pour qu'il ne soit diffusé qu'une seule fois
+	}
+
+    include($racine_path . "templates/forum/forum.php");	// Contient le contenu spécifique de la page d'accueil du forum
 	include($racine_path . "templates/footer.php");	// Footer contenant les informations sur le créateur
 	
 ?>

@@ -32,12 +32,6 @@
 	$stmt->execute([$id_discussion]);
 	$discussion = $stmt->fetch();
 
-	// Affiche un message d'erreur si la discussion avec l'ID passé en paramètre n'a pas bien été récupérée
-	if(!$discussion) {
-		echo "<div class='alert alert-danger text-center'>Discussion introuvable !</div>";
-		exit;
-	}
-
 	// Suppression d'un message
 	if(isset($_POST['supprimer_message'])) supprimer_message($_POST['supprimer_message'], $id_utilisateur, $id_discussion);
 
@@ -48,7 +42,20 @@
 
 	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
 	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
-    include($racine_path . "templates/discussion.php");	// Contient le template de la discussion
+
+	// Affiche un message d'erreur si la discussion avec l'ID passé en paramètre n'a pas bien été récupérée
+	if(!$discussion) {
+		echo "<div class='alert alert-danger text-center'>Discussion introuvable !</div>";
+		exit;
+	}
+
+	// Vérifie si une action a été effectuée par l'utilisateur 
+	if(isset($_SESSION['message'])) {
+		echo $_SESSION['message'];
+		unset($_SESSION['message']);	// Supprime le message pour qu'il ne soit diffusé qu'une seule fois
+	}
+
+    include($racine_path . "templates/discussion/discussion.php");	// Contient le template de la discussion
 	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
 	
 ?>
