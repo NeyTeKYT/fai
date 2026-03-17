@@ -6,8 +6,7 @@
         $fichier = fopen(__DIR__ . "/../../vocabulary.txt", "r");
 
         // Tableau contenant chaque mot du texte à analyser en minuscule pour comparer avec le vocabulaire
-        $texte = preg_replace('/[^a-z0-9 ]/i', '', strtolower($texte));
-        $texte_array = explode(" ", $texte);
+        $texte_array = explode(" ", strtolower($texte));
         $nb_mots = count($texte_array);
 
         if($fichier) {
@@ -26,7 +25,7 @@
                     // Met vecteur[$ind] à 1 si le texte contient le mot du vocabulaire
                     if($mot == $texte_array[$i]) {
                         $vecteur[$ind] = 1;
-                        break;
+                        break;  // Sort de la boucle for, mais pas de la boucle while
                     }
 
                 }
@@ -37,9 +36,9 @@
 
             fclose($fichier);
 
-            for($i = 0; $i < $nb_mots; $i++) echo $vecteur[$i];
-
         }
+
+        return $vecteur;
 
     }
 

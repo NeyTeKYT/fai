@@ -7,9 +7,13 @@
 
 		if($message !== "") {   // Si le message n'est pas nul = contient une information
 
+			$vecteur = calculer_vecteur($message);	// Calcule le vecteur binaire du message par rapport au vocabulaire
+			$valeurs_vecteur = "";
+			for($i = 0; $i < count($vecteur); $i++) $valeurs_vecteur = $valeurs_vecteur . $vecteur[$i];
+
 			// Insertion du message dans la table discussion avec l'ID de l'utilisateur pour savoir qui l'a envoyé
-			$stmt = $pdo->prepare("INSERT INTO message (discussion, user, date, message) VALUES (?, ?, NOW(), ?)");
-			$stmt->execute([$id_discussion,$_SESSION['id'],$message]);
+			$stmt = $pdo->prepare("INSERT INTO message (discussion, user, date, message, vecteur) VALUES (?, ?, NOW(), ?, ?)");
+			$stmt->execute([$id_discussion, $_SESSION['id'], $message, $valeurs_vecteur]);
 
 			// Stocke le message d'information dans une variable de la session de l'utilisateur pour pouvoir le récupérer sur une autre page
 			$_SESSION['message'] = "<div class='alert alert-success text-center'>Votre message a bien été publié !</div>";

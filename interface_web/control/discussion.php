@@ -18,6 +18,7 @@
 	include($racine_path . "templates/db.php");
 
 	include($racine_path . "utils/discussion/supprimer_message.php");	// Fonction qui supprime un message d'une discussion du forum de la BDD
+	require $racine_path . "utils/forum/calculer_vecteur.php";	// Fonction qui calcule le vecteur binaire d'un texte (titre ou message) en fonction du vocabulaire
 	include($racine_path . "utils/discussion/envoyer_message.php");	// Fonction qui envoie un message écrit par un utilisateur dans une discussion de la BDD
 	include($racine_path . "utils/discussion/recuperer_messages.php");	// Fonction qui récupère tous les messages d'une discussion et les retourne
 

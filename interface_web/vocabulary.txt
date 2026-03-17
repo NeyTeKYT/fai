@@ -21,7 +21,6 @@ montant
 descendant
 nat
 pare-feu
-internet
 port
 externe
 internet

@@ -29,14 +29,14 @@
 		// Algorithme de traitement de chaines de caractères sur le titre
 		if(isset($_POST['titre_ia'])) {
 
-			calculer_vecteur($_POST['titre_ia']);
+			$vecteur = calculer_vecteur($_POST['titre']);
 
 		}
 		
 		// Algorithme de traitement de chaines de caractères sur le message
 		elseif(isset($_POST['message_ia'])) {
 
-			// Lance l'algorithme
+			$vecteur = calculer_vecteur($_POST['message']);
 
 		}
 
