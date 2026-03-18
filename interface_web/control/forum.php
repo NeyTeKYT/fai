@@ -15,6 +15,8 @@
 	require $racine_path . "utils/forum/creer_discussion.php";	// Fonction qui ajoute une discussion (titre + message) dans la BDD
 	require $racine_path . "utils/forum/recuperer_discussions.php";	// Fonction qui retourne toutes les discussions existantes dans la BDD
 	require $racine_path . "utils/forum/calculer_vecteur.php";	// Fonction qui calcule le vecteur binaire d'un texte (titre ou message) en fonction du vocabulaire
+	require $racine_path . "utils/forum/calculer_similarite.php";	// Fonction qui calcule la similarité entre deux vecteurs et la retourne
+	require $racine_path . "utils/forum/verifier_ia.php";	// Fonction qui détermine quels sont les titres / messages qui se rapprochent le plus du texte à traiter
 
 	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
 
@@ -23,20 +25,26 @@
 	$stmt->execute([$id_utilisateur]);
 	$role_utilisateur = $stmt->fetchColumn();
 
+	// Variables globales pour l'affichage des résultats de l'IA dans le template
+	$resultats_ia = [];
+	$type_ia = null;
+
 	// N'autorise pas un technicien à ouvrir une discussion = il répond aux problèmes des utilisateurs 
 	if($_SERVER['REQUEST_METHOD'] === 'POST' && $role_utilisateur !== 'technicien') {
 
 		// Algorithme de traitement de chaines de caractères sur le titre
 		if(isset($_POST['titre_ia'])) {
 
-			$vecteur = calculer_vecteur($_POST['titre']);
+			$resultats_ia = verifier_ia($_POST['titre'], "discussion");
+			$type_ia = "discussion";
 
 		}
 		
 		// Algorithme de traitement de chaines de caractères sur le message
 		elseif(isset($_POST['message_ia'])) {
 
-			$vecteur = calculer_vecteur($_POST['message']);
+			$resultats_ia = verifier_ia($_POST['message'], "message");
+			$type_ia = "message";
 
 		}
 

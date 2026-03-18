@@ -10,6 +10,7 @@
         // If one of these is missing, it's better that the page breaks immediately.
         // Always use __DIR__ to define path relative to your current file.
         require __DIR__ . "/templates/creer_discussion.php";
+        require __DIR__ . "/templates/afficher_resultats_ia.php";
         require __DIR__ . "/templates/afficher_discussions.php";
 
     ?>
