@@ -6,9 +6,9 @@
             <div class="card shadow-sm">
 
                 <?php if(isset($_POST['titre_ia'])): ?>
-                    <div class="card-header fw-bold text-center">Résultats de l'IA pour votre titre : <?= htmlspecialchars($_POST['titre']) ?></div>
+                    <div class="card-header fw-bold text-center"><?= htmlspecialchars(count($resultats_ia)) ?> similaritées trouvées avec votre titre : <?= htmlspecialchars($_POST['titre']) ?></div>
                 <?php elseif(isset($_POST['message_ia'])): ?>
-                    <div class="card-header fw-bold text-center">Résultats de l'IA pour votre message : <?= htmlspecialchars($_POST['message']) ?></div>
+                    <div class="card-header fw-bold text-center"><?= htmlspecialchars(count($resultats_ia)) ?> similaritées trouvées avec votre message : <?= htmlspecialchars($_POST['message']) ?></div>
                 <?php endif; ?>
 
                 <div class="list-group list-group-flush">
@@ -26,53 +26,36 @@
                                         <!-- Titre de la discussion -->
                                         <h5 class="mb-1 text-dark"><?= htmlspecialchars($resultat['title']) ?></h5>
 
+                                        <!-- Créateur et date de création -->
                                         <div class="text-muted">
-                                            Lancée par <strong><?= htmlspecialchars($resultat['creator']) ?></strong>
+                                            Lancée par <strong><?= htmlspecialchars(recuperer_username($resultat['discussion'])) ?></strong>
+                                            le <?= date('d/m/Y', strtotime(recuperer_date($resultat['id']))) ?>
                                         </div>
 
                                     <?php elseif($type_ia === 'message'): ?>
 
-                                        <h5 class="mb-1 text-dark">
-                                            Message trouvé
-                                        </h5>
+                                        <!-- Message -->
+                                        <h5 class="mb-1 text-dark"><?= htmlspecialchars($resultat['message']) ?></h5>
 
+                                        <!-- Auteur et date de publication -->
                                         <div class="text-muted">
-                                            <?= htmlspecialchars($resultat['message']) ?>
+                                            Publiée par <strong><?= htmlspecialchars(recuperer_username($resultat['id'])) ?></strong>
+                                            le <?= date('d/m/Y', strtotime($resultat['date'])) ?>
                                         </div>
 
                                     <?php endif; ?>
 
                                 </div>
 
-                                <!-- COLONNE DROITE -->
                                 <div class="col-12 col-md-6 mt-3 mt-md-0">
 
-                                    <?php if($type_ia === 'discussion'): ?>
+                                    <?php 
+                                        $interpretation = interpreter_similarite($resultat['score']);
+                                    ?>
 
-                                        <?php if(!empty($resultat['date_dernier_message']) &&
-                                            strtotime($resultat['date_dernier_message']) > strtotime('-1 day')): ?>
-                                            <span class="badge bg-success mb-1">Nouveau</span>
-                                        <?php endif; ?>
+                                    <span class="badge <?= $interpretation['class'] ?> mb-2"><?= $interpretation['label'] ?></span>
 
-                                        <div class="fw-bold text-muted small mt-1">
-                                            Dernier message :
-                                        </div>
-
-                                        <div class="text-muted text-truncate">
-                                            <?= htmlspecialchars($resultat['dernier_message'] ?? '') ?>
-                                        </div>
-
-                                    <?php elseif($type_ia === 'message'): ?>
-
-                                        <div class="fw-bold text-muted small mt-1">
-                                            Contexte :
-                                        </div>
-
-                                        <div class="text-muted text-truncate">
-                                            <?= htmlspecialchars($resultat['message']) ?>
-                                        </div>
-
-                                    <?php endif; ?>
+                                    <div class="small text-muted">Score : <?= round($resultat['score'], 2) ?></div>
 
                                 </div>
 

@@ -17,6 +17,9 @@
 	require $racine_path . "utils/forum/calculer_vecteur.php";	// Fonction qui calcule le vecteur binaire d'un texte (titre ou message) en fonction du vocabulaire
 	require $racine_path . "utils/forum/calculer_similarite.php";	// Fonction qui calcule la similarité entre deux vecteurs et la retourne
 	require $racine_path . "utils/forum/verifier_ia.php";	// Fonction qui détermine quels sont les titres / messages qui se rapprochent le plus du texte à traiter
+	require $racine_path . "utils/forum/recuperer_username.php";	// Fonction qui retourne le créateur d'une discussion à partir de l'ID
+	require $racine_path . "utils/forum/recuperer_date.php";	// Fonction qui retourne la date de création d'une discussion à partir de l'ID
+	require $racine_path . "utils/forum/interpreter_similarite.php";	// Fonction qui renvoie un message d'interprétation en fonction du score calculé pour l'IA
 
 	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
 

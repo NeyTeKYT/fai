@@ -24,7 +24,7 @@
                                         <?= $discussion['date_creation'] ? "le " . date('d/m/Y', strtotime($discussion['date_creation'])) : '' ?>
                                     </div>
 
-                                    </div>
+                                </div>
 
                                 <div class="col-12 col-md-6 mt-3 mt-md-0" style="max-height: 400px; overflow-y: auto;">
 

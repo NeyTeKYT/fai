@@ -28,7 +28,11 @@
 
         $similar_discussions = [];
 
-        foreach($ind as $i) $similar_discussions[] = $data[$i]; // Détermine de quel titre / message le résultat du cos correspond
+        // Détermine de quel titre / message le résultat du cos correspond
+        foreach($ind as $i) {
+            $data[$i]['score'] = $cosine_similarity[$i];
+            $similar_discussions[] = $data[$i];
+        } 
 
         return $similar_discussions;
 
