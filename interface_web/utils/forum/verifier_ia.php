@@ -22,9 +22,14 @@
             $vecteur_table = str_split($data[$i]['vecteur']);
             $cosine_similarity[$i] = cosine_similarity($vecteur_texte, $vecteur_table);
         }
+
         arsort($cosine_similarity); // Trie le vecteur du plus grand au plus petit
 
-        $ind = array_slice(array_keys($cosine_similarity), 0, 3);   // Indices des 3 meilleures résultats
+        // Sélectionne seulement les titres / messages qui ont une similarité supérieur à 0 (contiennent au moins 1 mot du vocabulaire)
+        foreach($cosine_similarity as $key => $score) {
+            if($score > 0) $ind[] = $key;
+            else break;
+        }
 
         $similar_discussions = [];
 
