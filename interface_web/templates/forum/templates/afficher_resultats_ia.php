@@ -57,7 +57,7 @@
 
                                         <span class="badge <?= $interpretation['class'] ?> mb-2"><?= $interpretation['label'] ?></span>
 
-                                        <div class="small text-muted">Score : <?= round($resultat['score'], 2) ?></div>
+                                        <div class="small text-muted"><?= round($resultat['score'], 2) * 100 ?>% de similarité</div>
 
                                     </div>
 
