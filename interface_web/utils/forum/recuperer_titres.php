@@ -1,13 +1,13 @@
 <?php 
 
     // Fonction qui récupère tous les titres stockées dans la BDD et les retourne
-    private function recuperer_titres() {
+    function _recuperer_titres() {
 
         global $pdo;    // Permet d'accéder à la variable globale $pdo
 
-        $stmt = $pdo->prepare("SELECT title FROM discussion");
+        $stmt = $pdo->prepare("SELECT id, title FROM discussion");
 	    $stmt->execute();
-	    return $stmt->fetchAll();
+	    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     }
 

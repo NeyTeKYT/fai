@@ -30,7 +30,7 @@
 
                                             <!-- Créateur et date de création -->
                                             <div class="text-muted">
-                                                Lancée par <strong><?= htmlspecialchars(recuperer_username($resultat['discussion'])) ?></strong>
+                                                Lancée par <strong><?= htmlspecialchars(recuperer_username($resultat['creator'])) ?></strong>
                                                 le <?= date('d/m/Y', strtotime(recuperer_date($resultat['id']))) ?>
                                             </div>
 

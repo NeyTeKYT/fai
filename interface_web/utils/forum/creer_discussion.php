@@ -5,9 +5,8 @@
 
 		global $pdo;	// Permet d'accéder à la variable globale $pdo
 
-		$vecteur_titre = calculer_vecteur($titre);	// Calcule le vecteur binaire du titre par rapport au vocabulaire
-		$valeurs_vecteur_titre = "";
-		for($i = 0; $i < count($vecteur_titre); $i++) $valeurs_vecteur_titre = $valeurs_vecteur_titre . $vecteur_titre[$i];
+		$vecteur_titre = _calculer_vecteur($titre);	// Calcule le vecteur binaire du titre par rapport au vocabulaire
+		$valeurs_vecteur_titre = implode('', $vecteur_titre);
 
         // Création d'un nouvel enregistrement dans la table "discussion"
 		$stmt = $pdo->prepare("INSERT INTO discussion (creator, title, vecteur) VALUES (?, ?, ?)");
@@ -19,7 +18,7 @@
 
 		$id_discussion = $pdo->lastInsertId();	// Récupération de l'ID de la dernière discussion crée
 
-		$vecteur_message = calculer_vecteur($message);	// Calcule le vecteur binaire du message par rapport au vocabulaire
+		$vecteur_message = _calculer_vecteur($message);	// Calcule le vecteur binaire du message par rapport au vocabulaire
 		$valeurs_vecteur_message = "";
 		for($i = 0; $i < count($vecteur_message); $i++) $valeurs_vecteur_message = $valeurs_vecteur_message . $vecteur_message[$i];
 
