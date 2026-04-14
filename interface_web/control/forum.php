@@ -9,31 +9,20 @@
 
 	$racine_path = "../";	// Chemin vers la racine
 
-	require_once $racine_path . "templates/db.php";
+	require $racine_path . "templates/db.php";
 
 	ini_set('display_errors', 1);
 	error_reporting(E_ALL);
 
-	require_once $racine_path . "utils/forum/recuperer_titres.php";
-	require_once $racine_path . "utils/forum/recuperer_messages.php";
-	require_once $racine_path . "utils/forum/mettre_a_jour_vecteur.php";
-	require_once $racine_path . "utils/forum/compter_vocabulaire.php";
-	require_once $racine_path . "utils/forum/construire_vecteur.php";
-	require_once $racine_path . "utils/forum/modifier_tailles_varchar.php";
-	require_once $racine_path . "utils/forum/calculer_similarite.php";
-	require_once $racine_path . "utils/forum/resynchroniser_vecteurs.php";
-	require_once $racine_path . "utils/forum/ajouter_mot_vocabulaire.php";
-	require_once $racine_path . "utils/forum/apprentissage.php";
-	require_once $racine_path . "utils/forum/calculer_vecteur.php";
-	require_once $racine_path . "utils/forum/verifier_ia.php";
-	require_once $racine_path . "utils/forum/creer_discussion.php";
-	require_once $racine_path . "utils/forum/recuperer_discussions.php";
-	require_once $racine_path . "utils/forum/recuperer_username.php";
-	require_once $racine_path . "utils/forum/recuperer_date.php";
-	require_once $racine_path . "utils/forum/interpreter_similarite.php";
-	require_once $racine_path . "utils/discussion/supprimer_discussion.php";
-
-	require_once $racine_path . "utils/discussion/supprimer_discussion.php";	// Fonction qui supprime une discussion de la BDD
+	require $racine_path . "utils/forum/ia.php";	// Détermine les titres ou messages qui se rapprochent le plus du texte à traiter
+	require $racine_path . "utils/forum/calculer_vecteur.php";	// Calcule le vecteur binaire pour le texte passé en paramètre pour pouvoir le comparer avec ceux de la BDD
+	require $racine_path . "utils/forum/calculer_similarite.php";	// Calcule la similarité entre deux vecteurs et la retourne
+	require $racine_path . "utils/forum/creer_discussion.php";	// Ajoute une discussion (titre + message) dans la BDD
+	require $racine_path . "utils/forum/recuperer_discussions.php";	// Retourne toutes les discussions existantes sur le forum
+	require $racine_path . "utils/forum/recuperer_username.php";	// Retourne le créateur d'une discussion à partir de l'ID
+	require $racine_path . "utils/forum/recuperer_date.php";	// Retourne la date de création d'une discussion à partir de l'ID
+	require $racine_path . "utils/forum/interpreter_similarite.php";	// Renvoie un message d'interprétation en fonction du score calculé pour l'IA
+	//require $racine_path . "utils/discussion/supprimer_discussion.php";	// Supprime une discussion de la BDD
 
 	$id_utilisateur = $_SESSION['id'];	// Stockage dans une variable de l'ID de l'utilisateur connecté
 
@@ -75,8 +64,8 @@
 
 	$discussions = recuperer_discussions();
 
-	require_once $racine_path . "templates/head.php";	// La balise <head> avec toutes les métadonnées 
-	require_once $racine_path . "templates/navbar.php";	// Barre de navigation pour se déplacer entre les pages
+	require $racine_path . "templates/head.php";	// La balise <head> avec toutes les métadonnées 
+	require $racine_path . "templates/navbar.php";	// Barre de navigation pour se déplacer entre les pages
 
 	// Vérifie si une action a été effectuée par l'utilisateur 
 	if(isset($_SESSION['message'])) {
@@ -84,7 +73,7 @@
 		unset($_SESSION['message']);	// Supprime le message pour qu'il ne soit diffusé qu'une seule fois
 	}
 
-    require_once $racine_path . "templates/forum/forum.php";	// Contient le contenu spécifique de la page d'accueil du forum
-	require_once $racine_path . "templates/footer.php";	// Footer contenant les informations sur le créateur
+    require $racine_path . "templates/forum/forum.php";	// Contient le contenu spécifique de la page d'accueil du forum
+	require $racine_path . "templates/footer.php";	// Footer contenant les informations sur le créateur
 	
 ?>

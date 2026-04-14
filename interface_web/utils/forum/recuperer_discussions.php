@@ -1,6 +1,6 @@
 <?php 
 
-    // Fonction qui retourne toutes les discussions existantes sur le forum
+    // Retourne toutes les discussions existantes sur le forum
     function recuperer_discussions() {
 
         global $pdo;	// Permet d'accéder à la variable globale $pdo

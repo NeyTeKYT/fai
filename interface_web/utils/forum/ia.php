@@ -1,6 +1,6 @@
 <?php 
 
-    // Fonction qui détermine quels sont les titres / messages qui se rapprochent le plus du texte à traiter
+    // Détermine les titres ou messages qui se rapprochent le plus du texte à traiter
     function ia($texte, $nom_table) {
 
         global $pdo; // Permet d'accéder à la variable globale $pdo

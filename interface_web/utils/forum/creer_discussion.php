@@ -1,6 +1,6 @@
 <?php 
 
-    // Fonction qui ajoute une discussion (titre + message) dans la BDD
+    // Ajoute une discussion (titre + message) dans la BDD
     function creer_discussion($titre, $message, $id_utilisateur) {
 
 		global $pdo;	// Permet d'accéder à la variable globale $pdo
