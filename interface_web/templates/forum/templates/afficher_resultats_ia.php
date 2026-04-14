@@ -30,7 +30,7 @@
 
                                             <!-- Créateur et date de création -->
                                             <div class="text-muted">
-                                                Lancée par <strong><?= htmlspecialchars(recuperer_username($resultat['discussion'])) ?></strong>
+                                                Lancée par <strong><?= htmlspecialchars(recuperer_username($resultat['creator'])) ?></strong>
                                                 le <?= date('d/m/Y', strtotime(recuperer_date($resultat['id']))) ?>
                                             </div>
 
@@ -57,7 +57,7 @@
 
                                         <span class="badge <?= $interpretation['class'] ?> mb-2"><?= $interpretation['label'] ?></span>
 
-                                        <div class="small text-muted">Score : <?= round($resultat['score'], 2) ?></div>
+                                        <div class="small text-muted"><?= round($resultat['score'], 2) * 100 ?>% de similarité</div>
 
                                     </div>
 

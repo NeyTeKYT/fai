@@ -1,6 +1,6 @@
 <?php
 
-    // Fonction qui calcule la similarité entre deux vecteurs et la retourne
+    // Calcule la similarité entre deux vecteurs et la retourne
     function cosine_similarity($a, $b) {
 
         // Vérifie que la longueur est la même pour les deux vecteurs

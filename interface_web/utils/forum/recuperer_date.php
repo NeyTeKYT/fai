@@ -1,6 +1,6 @@
 <?php 
 
-    // Fonction qui retourne la date de création d'une discussion à partir de l'ID
+    // Retourne la date de création d'une discussion à partir de l'ID
     function recuperer_date($id) {
 
         global $pdo;	// Permet d'accéder à la variable globale $pdo

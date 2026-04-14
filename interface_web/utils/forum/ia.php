@@ -1,11 +1,11 @@
 <?php 
 
-    // Fonction qui détermine quels sont les titres / messages qui se rapprochent le plus du texte à traiter
-    function verifier_ia($texte, $nom_table) {
+    // Détermine les titres ou messages qui se rapprochent le plus du texte à traiter
+    function ia($texte, $nom_table) {
 
         global $pdo; // Permet d'accéder à la variable globale $pdo
 
-        $vecteur_texte = calculer_vecteur($texte);    // Calcule le vecteur binaire pour le texte passé en paramètre pour pouvoir le comparer avec ceux de la BDD
+        $vecteur_texte = _calculer_vecteur($texte);    // Calcule le vecteur binaire pour le texte passé en paramètre pour pouvoir le comparer avec ceux de la BDD
 
         // Valide le paramètre du nom de la table
         $allowed = ['discussion', 'message'];
@@ -24,6 +24,8 @@
         }
 
         arsort($cosine_similarity); // Trie le vecteur du plus grand au plus petit
+
+        $ind = [];
 
         // Sélectionne seulement les titres / messages qui ont une similarité supérieur à 0 (contiennent au moins 1 mot du vocabulaire)
         foreach($cosine_similarity as $key => $score) {

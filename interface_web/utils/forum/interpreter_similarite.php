@@ -1,6 +1,6 @@
 <?php
 
-    // Fonction qui renvoie un message d'interprétation en fonction du score calculé pour l'IA
+    // Renvoie un message d'interprétation en fonction du score calculé pour l'IA
     function interpreter_similarite($score) {
 
         if($score >= 0.6) return ["label" => "Très similaire", "class" => "bg-success"];
