@@ -1,64 +1,40 @@
-<?php
+<?php 
 
-	// Vérifie si l'utilisateur est connecté ou pas
-	session_start();
-	if(!isset($_SESSION['id'])) {
-		header("Location: ./login.php");
-		exit;
-	}
-
-	$racine_path = "../";	// Chemin vers la racine
-
-	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
-
-	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
-
-	// État du DHCP
-	$dhcp_state = trim(shell_exec("systemctl is-active isc-dhcp-server 2>/dev/null"));	
-	if($dhcp_state == "active") $dhcp_state_span = "<span class='text-success fw-bolder'>actif</span>";
-	else $dhcp_state_span = "<span class='text-danger fw-bolder'>innactif</span>";
-
-	// Par défaut à 0, sera incrémenté / décrémenté automatiquement par Ajax dans le fichier control/dhcp_hosts.php
-	$dhcp_leases = 0;
-
-	// Récupération de la plage d'adresses DHCP actuellement configurées
-	$dhcp_range = trim(shell_exec("grep 'range' /etc/dhcp/dhcpd.conf | awk '{print $2, $3}' | cut -d';' -f1"));	
-
-	// Récupère l'adresse IP
-	$get_ip_command = 'cat /etc/network/interfaces | grep "address" | cut -d" " -f2';
-	$current_ip = trim(shell_exec($get_ip_command));
-	// Sépare l'IP en 4 octets
-	$ip_address_octets = array_map('intval', explode('.', $current_ip));
-
-	// Récupère le masque de sous-réseau
-	$get_subnet_mask_command = 'cat /etc/network/interfaces | grep "netmask" | cut -d" " -f2';
-	$current_subnet_mask = trim(shell_exec($get_subnet_mask_command));
-	// Sépare le masque de sous-réseau en 4 octets
-	$subnet_mask_octets = array_map('intval', explode('.', $current_subnet_mask));
-
-	// Calcule l'adresse réseau
-	$network_address = sprintf(
-		"%d.%d.%d.%d",
-		($ip_address_octets[0] & $subnet_mask_octets[0]),
-		($ip_address_octets[1] & $subnet_mask_octets[1]),
-		($ip_address_octets[2] & $subnet_mask_octets[2]),
-		($ip_address_octets[3] & $subnet_mask_octets[3])
-	);
-
-	// Calcule le CIDR 
-	$subnet_mask_binary = '';
-	foreach ($subnet_mask_octets as $octet) $subnet_mask_binary .= str_pad(decbin((int)$octet), 8, '0', STR_PAD_LEFT);
-	$cidr = substr_count($subnet_mask_binary, '1');
-
-	# Calcule le nombre d'hôtes maximum à partir du CIDR
-	$max_value = pow(2, 32 - $cidr) - 2;
-
-	// Récupération du nombre de machines déjà configurées
-	$get_configured_devices_number = 'cat /etc/dhcp/dhcpd.conf | grep "# Nombre de machines configurées" | cut -d":" -f2';
-	$current_configured_devices_number = trim(shell_exec($get_configured_devices_number));
-
-	// Cas d'envoi du formulaire
+    // Cas d'envoi du formulaire
 	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+		// Soumission du formulaire pour modifier le nom de domaine de la box Internet
+		if(!empty($_POST['first_name'])) {
+
+			$first_name = trim($_POST['first_name']);	// Stockage du prénom entré à la soumission du formulaire pour modifier le prénom (alias) de la box Internet
+
+			// Un prénom ne peut pas contenir de chiffres et de caractères spéciaux
+			if(!preg_match('/^[a-zA-Z-]+$/', $first_name)) $alerts[] = "<div class='alert alert-danger text-center'>Le prénom ne doit contenir que des lettres et des tirets !</div>";
+
+			// Vérifie que le prénom ne dépasse pas la taille maximum d'un nom de domaine DNS (63)
+			else if(strlen($first_name) > 63) $alerts[] = "<div class='alert alert-danger text-center'>Le prénom doit avoir une longueur inférieure à 63 caractères !</div>";
+			
+			// Gestion du cas où le prénom est le prénom déjà configuré = soumission du formulaire sans rien modifier
+			else if(file_exists("/etc/bind/db.$first_name.ceri.com")) $alerts[] = "<div class='alert alert-danger text-center'>Le prénom a déjà été configuré comme domaine !</div>";
+
+			else {
+
+				$first_name_as_dns_prefix = strtolower($first_name);	// L'alias doit être en minuscule
+
+				// Exécution du script Bash avec en argument le nouveau prénom à configurer
+				$script_command = "sudo /home/stud/scripts/dns.sh " . escapeshellarg($first_name_as_dns_prefix);
+				shell_exec($script_command);
+
+				$current_first_name = $first_name_as_dns_prefix;	// Mise à jour du prénom actuellement configuré
+				$dns_domain = $current_first_name . ".ceri.com";	// Mise à jour du nom de domaine de la box Internet
+
+				// Message de configuration différent en fonction du mode de configuration de l'utilisateur
+				if($_SESSION['mode'] === 'debutant') $alerts[] = "<div class='alert alert-success text-center'>Le nouveau nom de la box Internet est $current_first_name.ceri.com !</div>";
+				else $alerts[] = "<div class='alert alert-success text-center'>Le nouveau nom de domaine de la box Internet est $current_first_name.ceri.com !</div>";
+				
+			}
+
+		}
 
 		# Cas où le mode de configuration de l'utilisateur est le mode débutant
 		if($_SESSION['mode'] === 'debutant') {
@@ -112,8 +88,4 @@
 		
 	}
 
-    include($racine_path . "templates/formulaire_dhcp.php");	// Contient le formulaire DHCP
-
-	include($racine_path . "templates/footer.php");	// Footer avec les informations du créateur
-	
 ?>

@@ -71,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderHosts(hosts) {
 
+        if(!hostsList || !noHostsMsg || !usersCount) return;
+
         // Mise en place de la future nouvelle structure de données où on va actualiser les hôtes connectés
         const newHosts = new Map();
 
@@ -130,6 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Centralise le processus Ajax pour récupérer les hôtes DHCP actuellement connectés 
     function fetchDhcpHosts() {
 
+        if(!hostsList) return;  // Inutile de fetch si on est pas sur la bonne page
+
         fetch('/interface_web/control/dhcp_hosts.php')
             .then(response => response.json())
             .then(data => {
@@ -140,11 +144,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
-    // Une requête toutes les 3 secondes
-    setInterval(fetchDhcpHosts, 3000);
+    if(hostsList) {
 
-    // Récupère les hôtes DHCP
-    fetchDhcpHosts();
+        // Une requête toutes les 3 secondes
+        setInterval(fetchDhcpHosts, 3000);
+
+        // Récupère les hôtes DHCP
+        fetchDhcpHosts();
+
+    }
 
     // Récupérations des éléments HTML sur lesquels le JavaScript va travailler
     const dnsCard  = document.getElementById('dns-hosts-card');
