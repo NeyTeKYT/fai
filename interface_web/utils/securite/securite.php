@@ -1,21 +1,4 @@
-<?php
-
-	// Vérifie si l'utilisateur est connecté ou pas
-	session_start();
-	if(!isset($_SESSION['id'])) {
-		header("Location: ./login.php");
-		exit;
-	}
-
-	$racine_path = "../";	// Chemin vers la racine
-
-	include($racine_path . "templates/head.php");	// La balise <head> avec toutes les métadonnées 
-
-	include($racine_path . "templates/navbar.php");	// Barre de navigation pour pouvoir se déplacer entre les pages
-
-    // Regarde dans le fichier du routage si il y a un 1 (= pare-feu activé) ou un 0 (= pare-feu désactivé)
-    $security_enabled = false;
-    if(file_exists('/proc/sys/net/ipv4/ip_forward')) $security_enabled = trim(file_get_contents('/proc/sys/net/ipv4/ip_forward')) === '1';
+<?php 
 
     // Action au clique sur l'un des boutons 
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -88,9 +71,7 @@
 
     }
 
-    // Spans d’affichage
-    $security_span = $security_enabled ? "<span class='text-success fw-bolder'>activée</span>" : "<span class='text-danger fw-bolder'>désactivée</span>";
-    $internet_span = $security_enabled ? "<span class='text-success fw-bolder'>actif</span>" : "<span class='text-danger fw-bolder'>inactif</span>";
+    
 
     // Récupération de toutes les règles crées par l'utilisateur
     $rules = [];
@@ -100,8 +81,4 @@
         if(!empty($output)) $rules = explode("\n", trim($output));
     }
 
-	include($racine_path . "templates/nat.php");    // Contient le contenu spécifique de la page de configuration du NAT
-
-	include($racine_path . "templates/footer.php"); // Footer avec les informations du créateur
-	
 ?>

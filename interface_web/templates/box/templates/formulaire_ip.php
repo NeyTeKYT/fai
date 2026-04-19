@@ -1,0 +1,81 @@
+<!-- Affichage du bandeau de notification -->
+<?php if(!empty($alerts)) foreach($alerts as $alert) echo $alert; ?>
+
+<div class="col-12 col-lg-6">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-light text-dark fw-bold text-center">IP et masque de sous-réseau</div>
+        <div class="card-body">
+                    
+			<!-- Formulaire de configuration IP -->
+            <form action="box.php" method="POST">
+
+                <!-- Configuration du masque de sous-réseau -->
+                <div class="mb-3 text-center">
+
+                    <?php if($_SESSION['mode'] === 'debutant') : ?>
+                        <label class="form-label fw-bold">Sous-réseau</label>
+                    <?php else : ?>
+                        <label class="form-label fw-bold">Masque de sous-réseau</label>
+                    <?php endif; ?>
+
+                    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
+                        <?php 
+                            for($i = 0; $i < 4; $i++) {
+                                echo "<select class='form-select w-auto' name='subnet_mask_octet" . ($i + 1) . "'>";
+                                foreach($valid_subnet_mask_octet_values as $value) {
+                                    $selected = ($current_subnet_mask_octets[$i] == $value) ? "selected" : "";
+                                    echo "<option value='$value' $selected>$value</option>";
+                                }
+                                echo "</select>";
+                                if($i < 3) echo "<span class='fw-bold'>.</span>";
+                            }
+                        ?>
+                    </div>
+                </div>
+
+                <!-- Configuration de l'adresse IP -->
+                <div class="mb-3 text-center">
+
+                    <?php if($_SESSION['mode'] === 'debutant') : ?> 
+                        <label class="form-label fw-bold">Adresse</label>
+                    <?php else : ?>
+                        <label class="form-label fw-bold">Adresse IP</label>
+                    <?php endif; ?>
+
+                    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center">
+
+						<!-- Valeur du premier octet -->
+                        <input type="number" class="form-control w-auto" id="ip_octet1" name="ip_octet1" min="0" max="255" 
+                            value="<?php echo explode('.', $current_ip)[0]; ?>">
+
+                        <span class="fw-bold">.</span>
+
+						<!-- Valeur du deuxième octet -->
+                        <input type="number" class="form-control w-auto" id="ip_octet2" name="ip_octet2" min="0" max="255" 
+                            value="<?php echo explode('.', $current_ip)[1]; ?>">
+
+                        <span class="fw-bold">.</span>
+
+						<!-- Valeur du troisième octet -->
+                        <input type="number" class="form-control w-auto" id="ip_octet3" name="ip_octet3" min="0" max="255" 
+                            value="<?php echo explode('.', $current_ip)[2]; ?>">
+
+                        <span class="fw-bold">.</span>
+
+						<!-- Valeur du quatrième octet -->
+                        <input type="number" class="form-control w-auto" id="ip_octet4" name="ip_octet4" min="0" max="255" 
+                            value="<?php echo explode('.', $current_ip)[3]; ?>">
+									
+                    </div>
+                </div>
+
+				<!-- Bouton pour changer la configuration -->
+                <button type="submit" class="btn btn-dark w-100 mt-3">Soumettre</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

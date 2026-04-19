@@ -1,137 +1,99 @@
-# 🌐 Fournisseur d'Accès à Internet (FAI)
+# Fournisseur d'Accès à Internet (FAI)
 
-Bienvenue sur le dépôt du ***Fournisseur d'Accès à Internet (FAI)***, une **interface web permettant de paramétrer les services proposés par un fournisseur d'accès à *Internet* sur un serveur, de manière intuitive**.  
+Bienvenue sur le dépôt de mon ***Fournisseur d'Accès à Internet (FAI)***, proposant une **interface web sur la box Internet permettant de paramétrer les services proposés de manière intuitive**.  
 
-Le but de projet est de permettre à n'importe quel utilisateur de configurer sa box *Internet* selon ses besoins, sans avoir nécessairement de connaissances en informatique.  
+Le but du projet est de permettre à n'importe quel utilisateur de configurer sa box *Internet* selon ses besoins, sans avoir nécessairement de connaissances en informatique.  
 
 Ce projet a été réalisé dans le cadre de l'**Activité de Mise en Situation (AMS) Réseau** tout au long de ma **troisième année de licence en informatique** à l'université d’*Avignon*.  
 
-🔍 Ce travail m’a permis de mettre en pratique toutes les connaissances acquises en **réseaux informatiques**, en **scripting (*Bash*)** et en **développement web (*HTML*, *CSS*, *JavaScript*, *PHP*)**.
+Ce travail m’a permis de mettre en pratique toutes les connaissances acquises en **réseaux informatiques**, en **scripting (*Bash*)** et en **développement web (*HTML*, *CSS*, *JavaScript*, *PHP*)**.
 
 ---
 
-## 📎 Formulaire IP
+## Tableau de bord
 
-La première étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de modifier l'adresse IP de la box *Internet***.
+Après s'être connecté sur le formulaire de connexion, l'utilisateur arrive alors sur le tableau de bord, permettant de rapidement voir les informations pertinentes des services proposés ainsi que d'accéder à des services secondaires comme la messagerie.
 
-Pour cela, j'ai développé un **script *Bash*** (`/scripts/ip.sh`) qui :
-1. Vérifie le nombre d'arguments fournis lors de l'appel du script et s'interrompt s'il n'y en a pas 2 (l'adresse IP et le masque de sous-réseau).
-2. Récupère, dans le fichier `/etc/network/interfaces`, l'adresse IP et le masque de sous-réseau de la configuration actuellle.
-3. Vérifie que les valeurs saisies par l'utilisateur sont différentes de la configuration actuelle (pour éviter une exécution inutile du script).
-4. Remplace l'adresse IP et le masque de sous-réseau par ceux fournis par l'utilisateur.
-5. Crée un dossier de sauvegarde dans `/var/backups/FAI` s'il n'existe pas déjà.
-6. Copie le fichier `/etc/network/interfaces` modifié dans `/var/backups/FAI` avec un nom horodatée : `interfaces_$date`.
-7. Redémarre l'interface réseau et vide le cache.
+---
 
-L'interface web permet désormais d'exécuter ce script sans passer par le terminal.  
-Pour le moment, elle dispose d'une simple page d'accueil avec un design CSS basique.  
-Un menu de navigation permet d'accéder à la page d'accueil et aux différents formulaires.  
+## Box
+
+Cet onglet regroupe les fonctionnalités permettant de configurer la box Internet.
+
+### Formulaire IP 
 
 Le **formulaire IP** permet à l'utilisateur **de modifier l'adresse IP de la box *Internet* ainsi que le masque de sous-réseau, de manière interactive grâce à du *JavaScript***.  
 Celui-ci ajuste automatiquement les octets modifiables de l'adresse IP en fonction du masque de sous-réseau.  
 
-Lors de la soumission du formulaire, le serveur PHP (une migration partielle vers JavaScript pour l'alléger est prévue) effectue plusieurs vérifications :
-- Analyse chaque octet du masque de sous-réseau saisi et s'assure qu'il correspond à une valeur valide. En cas d'erreur, un message est affiché.
-- Vérifie que le masque de sous-réseau est bien **consécutif en binaire** (une suite de 1 suivie d'une suite de 0). Sinon, un message d'erreur est affiché, car cette propriété est essentielle pur définir l'adresse réseau.
-- Récupère l'adresse IP saisie par l'utilisateur
-- Vérifie, grâce à la fonction *filter_var*, qu'elle est au format IPv4 et qu'il s'agit bien d'une **adresse privée** (non routable, car utilisée dans un réseau interne sous VirtualBox).
-- Exécute le script `/scripts/ip.sh` précédemment crée, via la fonction *exec*, en lui transmettant l'adresse IP et le masque de sous-réseau saisis.
-- Vérifie le code de retour du script pour déterminer si la configuration est identique à l'actuelle.
-- Affiche un message d'erreur dans ce cas, ou un message de confirmation en cas de succès.
+### Nom de domaine de la box
 
-![demo_formulaire_ip](https://github.com/user-attachments/assets/7777c35d-6986-4d61-8c81-01fe4fec9bcc)
+Il est également possible de configurer un nom de domaine pour la box Internet, du style `[PRÉNOM].ceri.com`. Ce formulaire ira modifier la ligne dans le fichier de configuration DNS du FAI pour ajuster le prénom.
 
 ---
 
-## 🗄️ Formulaire DHCP
-
-La deuxième étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de modifier la plage d'adresses attribuées par le serveur DHCP.**  
-
-Pour cela, j'ai développé un **script *Bash*** (`/scripts/dhcp.sh`) qui :
-1. Vérifie le nombre d'arguments fournis lors de l'appel du script et s'interrompt s'il n'y en a pas 2 (le nombre d'appareils souhaités dans la plage d'adresses et l'adresse réseau).
-2. Stocke ces arguments dans des variables.
-3. Récupère, dans le fichier `/etc/network/interfaces`, l'adresse IP et le masque de sous-réseau de la configuration actuellle, puis les enregistre dans des variables.
-4. Calcule le **CIDR** (nombre de bits à 1 dans le masque de sous-réseau). Si celui-ci vaut 31 ou 32, une erreur est renvoyée, car le protocole DHCP ne pourrait pas définir de plage d'adresses valides (ces masques ne laissent aucune adresse disponible pour les hôtes).
-5. Calcule le **nombre maximal d'hôtes possibles**. Retourne une erreur si le nombre saisi par l'utilisateur dépasse cette limite.
-6. Définit automatiquement **la première et la dernière adresse IP de la plage**, en fonction du nombre d'hôtes souhaité.
-7. Réecrit le fichier de configuration DHCP avec les nouvelles valeurs.
-8. Redémarre le serveur DHCP pour appliquer les changements.
-
-L’interface web permet désormais d’ajuster dynamiquement la plage d’adresses DHCP sans avoir à modifier les fichiers de configuration manuellement.  
-Comme pour le formulaire IP, la page est accessible depuis le menu de navigation et bénéficie du même design CSS simple et cohérent.  
+## Réseau
 
 Le **formulaire DHCP** affiche automatiquement, à l’ouverture, **le nombre d’hôtes actuellement configurés**.  
 Ces informations sont calculées à partir de l’adresse IP et du masque de sous-réseau, ce qui permet également de déterminer l’adresse réseau, le CIDR et le nombre maximal d’hôtes possibles.  
 L’utilisateur peut alors **saisir un nouveau nombre d’hôtes** afin de définir une nouvelle plage d’adresses que le serveur DHCP attribuera automatiquement.  
 
-Lors de la soumission du formulaire, le serveur PHP (une migration partielle vers JavaScript est également prévue pour améliorer les performances) effectue plusieurs vérifications :
-1. Vérifie que le **nombre d’hôtes** saisi est bien un entier.
-2. S’assure qu’il est **différent du nombre d’hôtes actuellement configurés**, et **inférieur au nombre maximal d’hôtes possibles** selon le masque de sous-réseau.
-3. Exécute le script *Bash* `/scripts/dhcp.sh` précédemment créé via la fonction *exec*, en lui transmettant les valeurs saisies par l’utilisateur.
-4. Analyse le **code de retour du script** pour détecter d’éventuelles erreurs.
-5. Affiche un **message d’erreur ou de confirmation** selon le résultat.
+### Mode avancé
 
-![demo_formulaire_dhcp](https://github.com/user-attachments/assets/edccb038-e6d9-41e6-9097-4f2bfe1c51af)
+Pour les utilisateurs du mode avancé, ils ont la possibilité de créer leur propre plage d'adresses IP sans qu'on leur demande le nombre d'appareils souhaités, c'est eux qui choisissent l'adresse de départ et celle d'arrivée.
 
 ---
 
-## 🌐 Formulaire DNS
+## Appareils
 
-La troisième étape de ce projet a consisté à créer, sur l'interface web, un formulaire permettant **de configurer son préfixe, via son prénom, pour définir un domaine pour la box Internet.**  
-Ceci permet, au lieu de ping l'adresse IP de la box Internet, de ping le domaine configuré grâce à une résolution. 
+Cet onglet a pour but d'afficher les appareils connectés à la box, c'est à dire les appareils qui ont reçu une adresse IP de la part du serveur DHCP de la box Internet.  
 
-Pour cela, j'ai développé un **script *Bash*** (`/scripts/dns.sh`) qui :
-1. Vérifie le nombre d'arguments fournis lors de l'appel du script et s'interrompt s'il n'y en a plus d'1 (le prénom, préfixe du domaine "ceri.com").
-2. Stocke l'arguments dans une variable.
-3. Attribue, si l'argument est vide, la valeur du hostname.
-4. Récupère, dans le fichier `/etc/network/interfaces`, l'adresse IP et le masque de sous-réseau de la configuration actuellle, puis les enregistre dans des variables.
-5. Calcule l'adresse réseau à partir des deux variables précédentes.
-6. Calcule le **CIDR** (nombre de bits à 1 dans le masque de sous-réseau). Si celui-ci vaut 31 ou 32, une erreur est renvoyée, car le protocole DHCP ne pourrait pas définir de plage d'adresses valides (ces masques ne laissent aucune adresse disponible pour les hôtes).
-7. Réecrit le fichier ***named.conf.local*** de la box Internet, situé dans le dossier ***/etc/bind*** pour redéfinir la zone en fonction du nouveau préfixe configuré.
-8. S'assure que le fichier ne retourne pas **une erreur de syntaxe** grâce à la commande ***named-checkconf***.
-9. Récupère le numéro *SERIAL* et l'incrémente.
-10. Supprime l'ancien fichier *db.$activeFirstName.ceri.com*
-11. Fait une copie du fichier *db.local* en ***db.$newFirstName.ceri.com***, où *$newFirstName* est l'argument donné au script.
-12. Modifie ce fichier en remplaçant les valeurs clés par les valeurs définies tout au long du script.
-13. Fait une copie du fichier *db.127* en ***reverse.$network_part.db***, où *$network_part* est la partie réseau calculée à partir du CIDR.
-14. Modifie ce fichier en remplaçant les valeurs clés par les valeurs définies tout au long du script.
-15. Réalise un backup des fichiers qui viennent d'être configurés dans le dossier ***/var/backups/FAI***/
-16. Redémarre le serveur *BIND9*.
-17. Crée un fichier de commandes pour utiliser ***nsupdate*** afin de modifier les informations du nouveau préfixe sur le serveur DNS se trouvant sur la machine virtuelle du FAI.
-18. Écriture dans ce fichier de commandes crée, au format attendu par nsupdate.
-19. Exécution de la commande, avec comme paramètre ma clé commune et connue par la box *Internet* et par le FAI.
-
-L’interface web permet désormais d'écrire son prénom pour pouvoir ping la box Internet à partir du domaine configuré.  
-
-Le **formulaire DNS** affiche automatiquement, à l’ouverture, **le prénom configuré**.  
-L’utilisateur peut alors **saisir un nouveau prénom** afin de définir un nouveau domaine qui sera automatiquement appliqué (voir GIF ci-joint).  
-
-Lors de la soumission du formulaire, le serveur *PHP* (une migration partielle vers JavaScript est également prévue pour améliorer les performances) effectue plusieurs vérifications :
-1. Vérifie que le **prénom** n'est pas vide.
-2. S'assure que le prénom **ne contient pas de chiffre ou de caractères spéciaux**.
-3. Compare la longueur du prénom qui ne doit pas dépasser **la taille max d'un préfixe DNS qui est 63**.
-4. Renvoie une erreur s'il s'agit déjà de la configuration actuelle.
-5. Affiche un **message d’erreur ou de confirmation** selon le résultat.
-
-![demo_interface_web_dns](https://github.com/user-attachments/assets/87eb402f-dfc9-4e75-b906-efcef084a7b0)
+Il est également possible sur cet onglet de configurer un sous-domaine pour un appareil de la forme `[PRÉNOM].[PRÉFIXE DU NOM DE DOMAINE DE LA BOX].ceri.com`.  
 
 ---
 
-## ⚙️ Installation
+## Sécurité
 
-Ce projet a été conçu pour fonctionner sur des machines virtuelles.  
-Voici les étapes d'installation du fournisseur d'accès à *Internet* sur votre serveur ou box :
-1. Créez une machine virtuelle avec un système d'exploitation Linux (de préférence avec une interface graphique pour accéder à l'interface web depuis la même machine).
-2. Configurez le fichier `/etc/network/interfaces` pour que l'interface "Réseau Interne" puisse obtenir une adresse IP de manière statique.
-3. Clonez ce dépôt sur votre machine personnelle.   
-4. Copiez le dossier `/scripts` dans votre répertoire personnel, par exemple : `/home/[Votre nom d'utilisateur]/`.
-5. Installez un serveur Apache sur votre machine virtuelle.
-6. Copiez le dossier `/interface_web` dans `/var/www/html/` afin d'y accéder via `localhost/interface_web` dans votre navigateur.
-7. Modifiez les droits du dossier `/interface_web` : `sudo chmod 777 interface_web`
-8. Pour permettre à Apache d'exécuter le script `/scripts/ip.sh` avec les privilèges sudo sans demander de mot de passe, exécutez `sudo visudo`, puis ajoutez la ligne suivante : `www-data ALL=(ALL) NOPASSWD: /home/[Votre nom d'utilisateur]/scripts/ip.sh`
-9. Téléchargez le serveur DHCP avec la commande `sudo apt install isc-dhcp-server`.
-10. Ajoutez une nouvelle ligne avec `sudo visudo` pour permettre à Apache d'exécuter le script sans demander de mot de passe : `www-data ALL=(ALL) NOPASSWD: /home/[Votre nom d'utilisateur]/scripts/dhcp.sh`.
+Un onglet primordial pour une box Internet puisque tout le traffic vers Internet, qu'il soit entrant ou sortant, passe par la box Internet.  
 
-Si tout est bien configuré, vous devriez pouvoir utiliser l'interface web pour modifier l'adresse IP du réseau interne et configurer la plage d'adresses attribuées par le serveur DHCP.
+L'utilisateur peut activer / désactiver le pare-feu, configuré avec une politique de sécurité comprenant plusieurs règles de base.  
 
-*L'installation du serveur DNS est en cours de réfléxion !*
+### Mode avancé 
+
+Le mode avancé permet de configurer du port-forwarding pour associer un port de la box Internet et un protocole à une adresse IP et un port.
+
+### Contrôle parental
+
+Un contrôle parental a été mis en place permettant à un parent de créer un profil pour son enfant (un profil associe un enfant (âge) à un appareil grâce à son adresse IP).
+
+Une fois le profil crée, une grid s'affiche representant le planning de contrôle parental du profil. On peut très facilement autoriser (vert) l'accès à Internet pour cet appareil à un jour et une heure donnée, ou le refuser (rouge) grâce à un clic sur la case correspondante. Pour confirmer les changements, il faudra cliquer sur le bouton de sauvegarde.
+
+#### IA Contrôle parental
+
+Puisque c'est très long de configurer sois-même chaque case du contrôle parental, j'ai décidé de mettre en place une IA permettant à un utilisateur lorsqu'il crée un profil, de cocher ou non la case IA. Si elle est cochée, alors l'âge du profil à crée sera comparé aux plannings de contrôle parental des profils déjà crées. Grâce à un système de poids (plus l'âge sera proche, plus le poids sera fort) on pourra généré la grid.  
+
+---
+
+## Forum 
+
+Cet onglet permet à un utilisateur de créer une discussion (titre + message) et de participer à une discussion en envoyant un message (il est possible de supprimer un message mais pas de le modifier).  
+
+### IA Forum 
+
+Le but de cet IA est de : 
+- éviter de congestionner la BDD (moins d'enregistrements car moins de discussions similaires),
+- moins de travail pour les potentiels employés du FAI (qui dans mon projet, ont un compte, et une fois connectés lorsqu'ils envoient un message leur message est certifié d'un badge), leur permettant de se concentrer sur d'autres tâches,
+- permettre à l'utilisateur d'obtenir une réponse plus rapidement si une discussion propose déjà la solution au problème.
+
+Pour cela, j'ai utilisé un système de one hot vector pour représenter dans un vecteur binaire si le mot est présent ou non dans le vocabulaire (initialisé par moi-même avec selon moi les mots les plus suceptibles d'être utilisés).
+
+#### Apprentissage par renforcement
+
+Pour améliorer mon IA, j'ai mis en place un apprentissage par renforcement pour qu'elle rajoute dans son vocabulaire, les mots qui ne sont pas déjà dans le vocabulaire, mais qui ne sont pas non plus dans une **stop list** récupérée sur Internet, pour éviter de stocker dans le vocabulaire des mots inutiles comme les déterminants, les pronoms personnels, etc...
+
+Ainsi, lorsqu'un utilisateur utilise un nouveau mot, il sera inséré dans le vocabulaire, tous les vecteurs binaires de tous les titres et discussions seront alors recalculés pour que l'ajout et l'apprentissage soit effectif.
+
+--- 
+
+## Paramètres
+
+C'est dans cet onglet que l'utilisateur peut modifier son nom d'utilisateur, sont mot de passe, et surtout le plus intéressant ici, son mode de configuration (avancé ou débutant).

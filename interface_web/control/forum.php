@@ -11,9 +11,6 @@
 
 	require $racine_path . "templates/db.php";
 
-	ini_set('display_errors', 1);
-	error_reporting(E_ALL);
-
 	require $racine_path . "utils/forum/ia.php";	// Détermine les titres ou messages qui se rapprochent le plus du texte à traiter
 	require $racine_path . "utils/forum/calculer_vecteur.php";	// Calcule le vecteur binaire pour le texte passé en paramètre pour pouvoir le comparer avec ceux de la BDD
 	require $racine_path . "utils/forum/calculer_similarite.php";	// Calcule la similarité entre deux vecteurs et la retourne
