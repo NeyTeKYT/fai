@@ -10,6 +10,7 @@
     $racine_path = "../";
 
 	require $racine_path . "templates/db.php";
+    require $racine_path . "utils/securite/ia_controle_parental.php";
     require $racine_path . "utils/securite/gestion_profil.php";
     require $racine_path . "utils/securite/controle_parental.php";
 	

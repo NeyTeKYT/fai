@@ -1,14 +1,35 @@
 <?php
 
     // Crée un profil dans la BDD
-    function creer_profil($nom, $age, $adresse_ipv4, $id_box) {
+    function creer_profil($nom, $age, $adresse_ipv4, $id_box, $utiliser_ia = false) {
 
         global $pdo;
 
         $stmt = $pdo->prepare("INSERT INTO profil (id_box, nom, age, adresse_ipv4) VALUES (?, ?, ?, ?)");
         $result = $stmt->execute([$id_box, $nom, $age, $adresse_ipv4]);
 
-        if($result) $_SESSION['message'] = "<div class='alert alert-success text-center'>Le profil <strong>$nom</strong> (<strong>$age ans</strong>) a bien été créé et lié à l'appareil <strong>$adresse_ipv4</strong> !</div>";
+        if($result) {
+
+            $id_nouveau_profil = $pdo->lastInsertId();
+
+            // Si l'IA est activée alors on utilise l'IA pour stocker directement un planning généré
+            if($utiliser_ia) {
+
+                $grille_suggeree = ia_planning($age);
+
+                if($grille_suggeree) {
+                    sauvegarder_grille($id_nouveau_profil, json_encode($grille_suggeree));
+                    $_SESSION['message'] = "<div class='alert alert-success text-center'>Le profil <strong>$nom</strong> (<strong>$age ans</strong>) a bien été créé et <strong>un planning a été généré par l'IA</strong> !</div>";
+                } 
+
+                else $_SESSION['message'] = "<div class='alert alert-success text-center'>Le profil <strong>$nom</strong> a été créé mais <strong>aucun planning similaire n'a pu être trouvé</strong>.</div>";
+
+            } 
+            
+            else $_SESSION['message'] = "<div class='alert alert-success text-center'>Le profil <strong>$nom</strong> (<strong>$age ans</strong>) a bien été créé et lié à l'appareil <strong>$adresse_ipv4</strong> !</div>";
+
+        }
+
         else $_SESSION['message'] = "<div class='alert alert-danger text-center'>Une erreur est survenue lors de la création du profil !</div>";
 
     }

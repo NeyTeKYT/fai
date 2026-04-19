@@ -8,8 +8,9 @@
         $age = intval($_POST['age']);
         $adresse_ipv4 = trim($_POST['ip']);
         $id_box = $_SESSION['id'];
+        $ia = isset($_POST['ia_planning']);
 
-        creer_profil($nom, $age, $adresse_ipv4, $id_box);
+        creer_profil($nom, $age, $adresse_ipv4, $id_box, $ia);
         header("Location: controle_parental.php");
         exit;
 

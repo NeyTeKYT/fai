@@ -16,7 +16,7 @@
 
                         <div class="d-flex align-items-center flex-wrap justify-content-center">
                             <input type="text" name="first_name" class="form-control text-center w-auto" style="max-width: 250px;" value="<?= $current_first_name; ?>" required>
-                            <span class="fw-bold">.ceri.com</span>
+                            <span class="fw-bold ms-2">.ceri.com</span>
                         </div>
 
                     </div>
